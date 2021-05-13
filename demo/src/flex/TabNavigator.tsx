@@ -9,9 +9,9 @@ namespace flex
 		public render(): JSX.Element
 		{
 			if (this.state == null)
-				this.state = { selectedIndex: this.props.selectedIndex };
+				this.state = { selectedIndex: this.props.selectedIndex, solidCheck: false };
 			if (this.state.selectedIndex == undefined)
-				this.state = { selectedIndex: 0 };
+				this.state = { selectedIndex: 0, solidCheck: false };
 			
 			let children: NavigatorContent[] = this.props.children as NavigatorContent[];
 			let selected: NavigatorContent = children[this.state.selectedIndex];
@@ -33,11 +33,23 @@ namespace flex
 			}
 			
 			let ret: JSX.Element =
-				<div className="tabNavigator" style={this.props.style}>
+				<div className="tabNavigator" style={{...this.props.style, position: 'relative'}}>
 					<ul className="tabNavigator_label">
 						{tabs}
 					</ul>
 					{selected}
+					<div style={{
+						position: 'absolute',
+						top: '5px',
+						right: '5px'
+					}}>
+						<input 
+							type="checkbox" 
+							onChange={this.props.handle_selectSolid} 
+							style={{'vertical-align': 'middle'}}
+							defaultChecked={this.props.solidCheck}/>
+							实心
+					</div>
 				</div>;
 
 			return ret;
@@ -60,7 +72,9 @@ namespace flex
 	export interface TabNavigatorProps extends React.Props<TabNavigator>
 	{
 		selectedIndex?: number;
+		solidCheck?: boolean;
 		style?: React.CSSProperties;
+		handle_selectSolid?: any
 	}
 	export interface NavigatorContentProps extends React.Props<NavigatorContent>
 	{

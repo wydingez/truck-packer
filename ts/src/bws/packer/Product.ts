@@ -33,6 +33,11 @@ namespace bws.packer
 		 */
 		protected length: number = 0.0;
 
+		/**
+		 * Length of the Product, length on the Z-axis in 3D.
+		 */
+		 protected color: string = "";
+
 		/* -----------------------------------------------------------
 			CONSTRUCTORS
 		----------------------------------------------------------- */
@@ -48,10 +53,11 @@ namespace bws.packer
 		 * @param width Width, length on the X-axis in 3D.
 		 * @param height Height, length on the Y-axis in 3D.
 		 * @param length Length, length on the Z-axis in 3D.
+		 * @param color color, color on the Z-axis in 3D.
 		 */
-		public constructor(name: string, width: number, height: number, length: number);
+		public constructor(name: string, width: number, height: number, length: number, color: string);
 
-		public constructor(name: string = "No Name", width: number = 0, height: number = 0, length: number = 0)
+		public constructor(name: string = "No Name", width: number = 0, height: number = 0, length: number = 0, color: string)
 		{
 			super();
 
@@ -60,6 +66,7 @@ namespace bws.packer
 			this.width = width;
 			this.height = height;
 			this.length = length;
+			this.color = color;
 		}
 
 		/* -----------------------------------------------------------
@@ -108,6 +115,14 @@ namespace bws.packer
 		/**
 		 * @inheritdoc
 		 */
+		 public getColor(): string 
+		 {
+			 return this.color;
+		 }
+
+		/**
+		 * @inheritdoc
+		 */
 		public getVolume(): number
 		{
 			return this.width * this.height * this.length;
@@ -144,6 +159,14 @@ namespace bws.packer
 		{
 			this.length = val;
 		}
+
+		/**
+		 * @inheritdoc
+		 */
+		 public setColor(val: string): void
+		 {
+			 this.color = val;
+		 }
 
 		/* -----------------------------------------------------------
 			EXPORTERS

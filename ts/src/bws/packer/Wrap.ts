@@ -385,6 +385,10 @@ namespace bws.packer
 		{
 			return this.x + ", " + this.y + ", " + this.z;
 		}
+		public get $color(): string
+		{
+			return this.instance.getColor()
+		}
 
 		/* -----------------------------------------------------------
 			EXPORTERS

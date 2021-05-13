@@ -62,15 +62,15 @@ namespace bws.packer.demo
 					<table style={{ textAlign: "center" }}>
 					<tbody>
 						<tr>
-							<td> <img src="images/newFile.png" onClick={this.clear.bind(this)} /> </td>
+							{/* <td> <img src="images/newFile.png" onClick={this.clear.bind(this)} /> </td>
 							<td> <img src="images/openFile.png" onClick={this.open.bind(this)} /> </td>
-							<td> <img src="images/saveFile.png" onClick={this.save.bind(this)} /> </td>
+							<td> <img src="images/saveFile.png" onClick={this.save.bind(this)} /> </td> */}
 							<td> <img src="images/document.png" onClick={this.pack.bind(this)} /> </td>
 						</tr>
 						<tr>
-							<td> New File </td>
+							{/* <td> New File </td>
 							<td> Open File </td>
-							<td> Save File </td>
+							<td> Save File </td> */}
 							<td> Pack </td>
 						</tr>
 					</tbody>

@@ -7,12 +7,14 @@
 namespace bws.packer.demo
 {
 	export class Application
-		extends React.Component<{}, {}>
+		extends React.Component<{solidCheck: boolean}, {solidCheck: boolean}>
 	{
 		private instances: InstanceFormArray;
 		private wrappers: WrapperArray;
 
 		private result: WrapperArray;
+
+		private recordWrapper: {wrapper: Wrapper, index: number}
 
 		/* -----------------------------------------------------------
 			CONSTRUCTORS
@@ -28,22 +30,36 @@ namespace bws.packer.demo
 			this.wrappers = new WrapperArray();
 			this.result = new WrapperArray();
 
-			// INITIAL, EXMAPLE DATA
-			this.wrappers.push
-			(
-				new Wrapper("Large", 1000, 40, 40, 15, 0),
-				new Wrapper("Medium", 700, 20, 20, 10, 0),
-				new Wrapper("Small", 500, 15, 15, 8, 0)
-			);
-			this.instances.push
-			(
-				new InstanceForm(new Product("Eraser", 1, 2, 5), 15),
-				new InstanceForm(new Product("Book", 15, 30, 3), 15),
-				new InstanceForm(new Product("Drink", 3, 3, 10), 15),
-				new InstanceForm(new Product("Umbrella", 5, 5, 20), 15),
-				new InstanceForm(new Product("Notebook-Box", 30, 40, 4), 15),
-				new InstanceForm(new Product("Tablet-Box", 20, 28, 2), 15)
-			);
+			this.state = { solidCheck: false }
+			this.recordWrapper = null
+
+			// Promise.all([
+			// 	axios.get('http://192.168.199.121:3001/packer/getWrapper'),
+			// 	axios.get('http://192.168.199.121:3001/packer/getGoods')
+			// ]).then(([{data: wrapper}, {data: goods}]) => {
+			// 	// INITIAL, EXMAPLE DATA
+			// 	this.wrappers.push(new Wrapper(wrapper.name, 1000, wrapper.w, wrapper.h, wrapper.l, wrapper.thickness))
+
+			// 	goods.forEach(good => {
+			// 		this.instances.push(new InstanceForm(new Product(good.name, good.w, good.l, good.h), good.count))
+			// 	})
+
+			// 	this.pack()
+			// })
+
+			axios.get('http://192.168.199.121:3001/packer/getAllInfo').then(({data}) => {
+				if(data.success) {
+					let info = data.object
+
+					this.wrappers.push(new Wrapper('TRUCK', 1000, info.vehicleWidth, info.VehicleHeight, info.vehicleLength, 0))
+
+					info.packageList.forEach(good => {
+						this.instances.push(new InstanceForm(new Product(good.name, good.width, good.height, good.length, good.color), good.sum))
+					})
+
+					this.pack()
+				}
+			})
 		}
 
 		/* -----------------------------------------------------------
@@ -81,16 +97,29 @@ namespace bws.packer.demo
 			(this.refs["tabNavigator"] as flex.TabNavigator).setState({ selectedIndex: 1 });
 		}
 
+		public updateRecrodWrapper (wrapper: Wrapper, index: number) {
+			this.recordWrapper = {wrapper, index}
+		},
+
 		public drawWrapper(wrapper: Wrapper, index: number = wrapper.size()): void
 		{
 			// INITIALIZE
 			let div: HTMLDivElement = document.getElementById("wrapper_viewer") as HTMLDivElement;
 			let canvas: HTMLCanvasElement = this.wrapper_to_canvas(wrapper, index); // DRAW
 
+			this.recordWrapper = null
 			// PRINT
 			if (div.hasChildNodes() == true)
 				div.removeChild(div.childNodes[0]);
 			div.appendChild(canvas);
+		}
+
+		public drawSwitchSolid () {
+			if (this.recordWrapper) {
+				this.wrapper_to_canvas(this.recordWrapper.wrapper, this.recordWrapper.index)
+			} else {
+				this.drawWrapper(this.result.front())
+			}
 		}
 		
 		/* -----------------------------------------------------------
@@ -111,7 +140,7 @@ namespace bws.packer.demo
 			let ret: JSX.Element =
 				<div>
 					<div style={{width: "100%", height: "100%", fontSize: 12}}>
-						<flex.TabNavigator ref="tabNavigator" 
+						<flex.TabNavigator ref="tabNavigator" solidCheck={this.state.solidCheck} handle_selectSolid={this.handle_selectSolid.bind(this)}
 										   style={{ width: 400, height: "100%", float: "left" }}>
 							<flex.NavigatorContent label="First Tab">
 								<ItemEditor application={this}
@@ -125,19 +154,22 @@ namespace bws.packer.demo
 						<div id="wrapper_viewer" style={{height: "100%", overflow: "hidden"}}>
 						</div>
 					</div>
-					<div style={{position: "absolute", right: 10, bottom: 10}}>
-						<a href="http://redprinting.co.kr/" target="_blank">
-							<img src="images/redprinting_logo.png"
-								 width="250" />
-						</a>
-					</div>
 				</div>;
 			
 			return ret;
 		}
 
+		private handle_selectSolid (e: React.FormEvent<HTMLInputElement>) : void {
+			this.setState({
+				solidCheck: !this.state.solidCheck
+			}, () => {
+				this.drawSwitchSolid()
+			})
+		} 
+
 		private wrapper_to_canvas(wrapper: Wrapper, index: number): HTMLCanvasElement
 		{
+			//
 			// ---------------------------------------
 			// CONSTRUCTS
 			// ---------------------------------------
@@ -291,7 +323,7 @@ namespace bws.packer.demo
 						geometry,
 						new THREE.MeshPhongMaterial
 							({
-								color: 0xFF0000, shading: THREE.FlatShading,
+								color: '#ddd', shading: THREE.FlatShading,
 								vertexColors: THREE.VertexColors, shininess: 0
 							})
 						);
@@ -362,7 +394,7 @@ namespace bws.packer.demo
 			// SHAPE
 			// ---------------------------------------
 			if ((wrap as any).color_ == undefined)
-				(wrap as any).color_ = Math.random() * 0xFFFFFF;
+				(wrap as any).color_ = wrap.instance.color || Math.random() * 0xFFFFFF;
 
 			let shape: THREE.Mesh = new THREE.Mesh
 			(
@@ -371,7 +403,7 @@ namespace bws.packer.demo
 				({
 					color: (wrap as any).color_,
 					opacity: 0.5,
-					transparent: true
+					transparent: !this.state.solidCheck
 				})
 			);
 

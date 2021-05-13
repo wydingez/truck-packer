@@ -11,7 +11,9 @@ namespace bws.packer.demo
 	{
 		public drawWrapper(wrapper: Wrapper, index: number = wrapper.size()): void
 		{
+			console.log(this.props.application)
 			this.props.application.drawWrapper(wrapper, index);
+			this.props.application.updateRecrodWrapper(wrapper, index) 
 		}
 
 		private clear(event: React.MouseEvent<HTMLElement>): void
@@ -71,14 +73,14 @@ namespace bws.packer.demo
 					<table style={{ textAlign: "center" }}>
 						<tbody>
 							<tr>
-								<td> <img src="images/newFile.png" onClick={this.clear.bind(this) } /> </td>
+								{/* <td> <img src="images/newFile.png" onClick={this.clear.bind(this) } /> </td>
 								<td> <img src="images/openFile.png" onClick={this.open.bind(this) } /> </td>
-								<td> <img src="images/saveFile.png" onClick={this.save.bind(this) } /> </td>
+								<td> <img src="images/saveFile.png" onClick={this.save.bind(this) } /> </td> */}
 							</tr>
 							<tr>
-								<td> New File </td>
+								{/* <td> New File </td>
 								<td> Open File </td>
-								<td> Save File </td>
+								<td> Save File </td> */}
 							</tr>
 						</tbody>
 					</table>
@@ -184,12 +186,25 @@ namespace bws.packer.demo
 		{
 			super();
 
+
+
 			// CONSTRUCT COLUMNS
 			this.columns =
 				[
 					{ key: "$instanceName", name: "Name", width: 120 },
 					{ key: "$layoutScale", name: "layoutScale", width: 90 },
-					{ key: "$position", name: "Position", width: 90 }
+					{ key: "$position", name: "Position", width: 90 },
+					{ key: '$color', name: 'Color', width: 50, formatter: (obj: any) => {
+
+						let style = (color: string) => {
+							return {
+								width: '35px',
+								height: '35px',
+								background: color
+							}
+						}
+						return <div style={style(obj.value)}></div>
+					}}
 				];
 		}
 
@@ -204,7 +219,6 @@ namespace bws.packer.demo
 			{
 				let index: number = (this.props.viewer.refs["wrapperGrid"] as WrapperGrid).selectedIndex;
 				let wrapper: Wrapper = this.props.viewer.props.wrappers.at(index);
-
 				return wrapper;
 			}
 			catch (exception)

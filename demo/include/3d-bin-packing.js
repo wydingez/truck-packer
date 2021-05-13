@@ -63,7 +63,7 @@ var boxologic;
      *
      * @author Jeongho Nam <http://samchon.org>
      */
-    var Instance = (function () {
+    var Instance = /** @class */ (function () {
         /* -----------------------------------------------------------
             CONSTRUCTORS
         ----------------------------------------------------------- */
@@ -91,11 +91,21 @@ var boxologic;
     boxologic.Instance = Instance;
 })(boxologic || (boxologic = {}));
 /// <reference path="../bws/packer/API.ts" />
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 /// <reference path="Instance.ts" />
 var boxologic;
 (function (boxologic) {
@@ -105,7 +115,7 @@ var boxologic;
      * @author Bill Knechtel, <br>
      *		   Migrated and Refactored by Jeongho Nam <http://samchon.org>
      */
-    var Box = (function (_super) {
+    var Box = /** @class */ (function (_super) {
         __extends(Box, _super);
         /**
          * Construct from an instance.
@@ -169,7 +179,7 @@ var boxologic;
      * @author Bill Knechtel, <br>
      *		   Migrated and Refactored by Jeongho Nam <http://samchon.org>
      */
-    var Boxologic = (function () {
+    var Boxologic = /** @class */ (function () {
         /* ===========================================================
             CONSTRUCTORS
                 - CONSTRUCTOR
@@ -899,7 +909,7 @@ var boxologic;
             else {
                 var prev = this.scrap_min_z.prev();
                 var next = this.scrap_min_z.next();
-                if (this.bboxi != -1 &&
+                if (this.bboxi != -1 && // IN RANGE
                     (this.layer_in_layer != 0 ||
                         (
                         // NO LEFT AND RIGHT EXISTS
@@ -1110,7 +1120,7 @@ var boxologic;
      * @author Bill Knechtel, <br>
      *		   Migrated and Refactored by Jeongho Nam <http://samchon.org>
      */
-    var Pallet = (function (_super) {
+    var Pallet = /** @class */ (function (_super) {
         __extends(Pallet, _super);
         /**
          * Construct from a wrapper.
@@ -1172,7 +1182,7 @@ var boxologic;
      * @author Bill Knechtel, <br>
      *		   Migrated and Refactored by Jeongho Nam <http://samchon.org>
      */
-    var Scrap = (function () {
+    var Scrap = /** @class */ (function () {
         function Scrap(cumx, cumz) {
             if (cumx === void 0) { cumx = 0; }
             if (cumz === void 0) { cumz = 0; }
@@ -1193,7 +1203,7 @@ var bws;
          *
          * @author Jeongho Nam <http://samchon.org>
          */
-        var PackerForm = (function (_super) {
+        var PackerForm = /** @class */ (function (_super) {
             __extends(PackerForm, _super);
             function PackerForm(instanceFormArray, wrapperArray) {
                 if (instanceFormArray === void 0) { instanceFormArray = new InstanceFormArray(); }
@@ -1244,7 +1254,7 @@ var bws;
          *
          * @author Jeongho Nam <http://samchon.org>
          */
-        var InstanceFormArray = (function (_super) {
+        var InstanceFormArray = /** @class */ (function (_super) {
             __extends(InstanceFormArray, _super);
             /* -----------------------------------------------------------
                 CONSTRUCTORS
@@ -1291,7 +1301,7 @@ var bws;
          *
          * @author Jeongho Nam <http://samchon.org>
          */
-        var InstanceForm = (function (_super) {
+        var InstanceForm = /** @class */ (function (_super) {
             __extends(InstanceForm, _super);
             /* -----------------------------------------------------------
                 CONSTRUCTORS
@@ -1346,31 +1356,31 @@ var bws;
             Object.defineProperty(InstanceForm.prototype, "$name", {
                 get: function () { return this.instance.getName(); },
                 set: function (val) { this.instance.setName(val); },
-                enumerable: true,
+                enumerable: false,
                 configurable: true
             });
             Object.defineProperty(InstanceForm.prototype, "$width", {
                 get: function () { return this.instance.getWidth() + ""; },
                 set: function (val) { this.instance.setWidth(parseFloat(val)); },
-                enumerable: true,
+                enumerable: false,
                 configurable: true
             });
             Object.defineProperty(InstanceForm.prototype, "$height", {
                 get: function () { return this.instance.getHeight() + ""; },
                 set: function (val) { this.instance.setHeight(parseFloat(val)); },
-                enumerable: true,
+                enumerable: false,
                 configurable: true
             });
             Object.defineProperty(InstanceForm.prototype, "$length", {
                 get: function () { return this.instance.getLength() + ""; },
                 set: function (val) { this.instance.setLength(parseFloat(val)); },
-                enumerable: true,
+                enumerable: false,
                 configurable: true
             });
             Object.defineProperty(InstanceForm.prototype, "$count", {
                 get: function () { return this.count + ""; },
                 set: function (val) { this.count = parseInt(val); },
-                enumerable: true,
+                enumerable: false,
                 configurable: true
             });
             /* -----------------------------------------------------------
@@ -1416,7 +1426,7 @@ var bws;
 (function (bws) {
     var packer;
     (function (packer) {
-        var WrapperArray = (function (_super) {
+        var WrapperArray = /** @class */ (function (_super) {
             __extends(WrapperArray, _super);
             /* -----------------------------------------------------------
                 CONSTRUCTORS
@@ -1487,7 +1497,7 @@ var bws;
 (function (bws) {
     var packer;
     (function (packer) {
-        var GAWrapperArray = (function (_super) {
+        var GAWrapperArray = /** @class */ (function (_super) {
             __extends(GAWrapperArray, _super);
             function GAWrapperArray(obj) {
                 var _this = _super.call(this) || this;
@@ -1567,7 +1577,7 @@ var bws;
          *
          * @author Jeongho Nam <http://samchon.org>
          */
-        var InstanceArray = (function (_super) {
+        var InstanceArray = /** @class */ (function (_super) {
             __extends(InstanceArray, _super);
             /* -----------------------------------------------------------
                 CONSTRUCTORS
@@ -1634,7 +1644,7 @@ var bws;
          *
          * @author Jeongho Nam <http://samchon.org>
          */
-        var Packer = (function (_super) {
+        var Packer = /** @class */ (function (_super) {
             __extends(Packer, _super);
             function Packer(wrapperArray, instanceArray) {
                 if (wrapperArray === void 0) { wrapperArray = null; }
@@ -1885,9 +1895,9 @@ var bws;
          *
          * @author Jeongho Nam <http://samchon.org>
          */
-        var Product = (function (_super) {
+        var Product = /** @class */ (function (_super) {
             __extends(Product, _super);
-            function Product(name, width, height, length) {
+            function Product(name, width, height, length, color) {
                 if (name === void 0) { name = "No Name"; }
                 if (width === void 0) { width = 0; }
                 if (height === void 0) { height = 0; }
@@ -1911,10 +1921,15 @@ var bws;
                  * Length of the Product, length on the Z-axis in 3D.
                  */
                 _this.length = 0.0;
+                /**
+                 * Length of the Product, length on the Z-axis in 3D.
+                 */
+                _this.color = "";
                 _this.name = name;
                 _this.width = width;
                 _this.height = height;
                 _this.length = length;
+                _this.color = color;
                 return _this;
             }
             /* -----------------------------------------------------------
@@ -1953,6 +1968,12 @@ var bws;
             /**
              * @inheritdoc
              */
+            Product.prototype.getColor = function () {
+                return this.color;
+            };
+            /**
+             * @inheritdoc
+             */
             Product.prototype.getVolume = function () {
                 return this.width * this.height * this.length;
             };
@@ -1979,6 +2000,12 @@ var bws;
              */
             Product.prototype.setLength = function (val) {
                 this.length = val;
+            };
+            /**
+             * @inheritdoc
+             */
+            Product.prototype.setColor = function (val) {
+                this.color = val;
             };
             /* -----------------------------------------------------------
                 EXPORTERS
@@ -2025,7 +2052,7 @@ var bws;
          *
          * @author Jeongho Nam <http://samchon.org>
          */
-        var Wrap = (function (_super) {
+        var Wrap = /** @class */ (function (_super) {
             __extends(Wrap, _super);
             function Wrap(wrapper, instance, x, y, z, orientation) {
                 if (instance === void 0) { instance = null; }
@@ -2225,7 +2252,7 @@ var bws;
                     case 3:
                     case 4:
                         return this.instance.getHeight();
-                    default:
+                    default: // 2, 5
                         return this.instance.getLength();
                 }
             };
@@ -2240,7 +2267,7 @@ var bws;
                     case 4:
                     case 6:
                         return this.instance.getWidth();
-                    default:
+                    default: // 3, 5
                         return this.instance.getLength();
                 }
             };
@@ -2255,7 +2282,7 @@ var bws;
                     case 2:
                     case 3:
                         return this.instance.getWidth();
-                    default:
+                    default: // 5, 6
                         return this.instance.getHeight();
                 }
             };
@@ -2269,21 +2296,28 @@ var bws;
                 get: function () {
                     return this.instance.getName();
                 },
-                enumerable: true,
+                enumerable: false,
                 configurable: true
             });
             Object.defineProperty(Wrap.prototype, "$layoutScale", {
                 get: function () {
                     return this.getLayoutWidth() + ", " + this.getLayoutHeight() + ", " + this.getLength();
                 },
-                enumerable: true,
+                enumerable: false,
                 configurable: true
             });
             Object.defineProperty(Wrap.prototype, "$position", {
                 get: function () {
                     return this.x + ", " + this.y + ", " + this.z;
                 },
-                enumerable: true,
+                enumerable: false,
+                configurable: true
+            });
+            Object.defineProperty(Wrap.prototype, "$color", {
+                get: function () {
+                    return this.instance.getColor();
+                },
+                enumerable: false,
                 configurable: true
             });
             /* -----------------------------------------------------------
@@ -2321,7 +2355,7 @@ var bws;
          *
          * @author Jeongho Nam <http://samchon.org>
          */
-        var Wrapper = (function (_super) {
+        var Wrapper = /** @class */ (function (_super) {
             __extends(Wrapper, _super);
             function Wrapper() {
                 var args = [];
@@ -2573,51 +2607,51 @@ var bws;
                 ----------------------------------------------------------- */
                 get: function () { return this.name; },
                 set: function (val) { this.name = val; },
-                enumerable: true,
+                enumerable: false,
                 configurable: true
             });
             Object.defineProperty(Wrapper.prototype, "$price", {
                 get: function () { return this.price + ""; },
                 set: function (val) { this.price = parseFloat(val); },
-                enumerable: true,
+                enumerable: false,
                 configurable: true
             });
             Object.defineProperty(Wrapper.prototype, "$width", {
                 get: function () { return this.width + ""; },
                 set: function (val) { this.width = parseFloat(val); },
-                enumerable: true,
+                enumerable: false,
                 configurable: true
             });
             Object.defineProperty(Wrapper.prototype, "$height", {
                 get: function () { return this.height + ""; },
                 set: function (val) { this.height = parseFloat(val); },
-                enumerable: true,
+                enumerable: false,
                 configurable: true
             });
             Object.defineProperty(Wrapper.prototype, "$length", {
                 get: function () { return this.length + ""; },
                 set: function (val) { this.length = parseFloat(val); },
-                enumerable: true,
+                enumerable: false,
                 configurable: true
             });
             Object.defineProperty(Wrapper.prototype, "$thickness", {
                 get: function () { return this.thickness + ""; },
                 set: function (val) { this.thickness = parseFloat(val); },
-                enumerable: true,
+                enumerable: false,
                 configurable: true
             });
             Object.defineProperty(Wrapper.prototype, "$scale", {
                 get: function () {
                     return this.width + ", " + this.height + ", " + this.length;
                 },
-                enumerable: true,
+                enumerable: false,
                 configurable: true
             });
             Object.defineProperty(Wrapper.prototype, "$spaceUtilization", {
                 get: function () {
                     return Math.round(this.getUtilization() * 10000) / 100.0 + "%";
                 },
-                enumerable: true,
+                enumerable: false,
                 configurable: true
             });
             /* ===========================================================
@@ -2664,7 +2698,7 @@ var bws;
          *
          * @author Jeongho Nam <http://samchon.org>
          */
-        var WrapperGroup = (function (_super) {
+        var WrapperGroup = /** @class */ (function (_super) {
             __extends(WrapperGroup, _super);
             function WrapperGroup() {
                 var args = [];

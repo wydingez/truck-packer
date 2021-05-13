@@ -1,12 +1,35 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
 /// <reference types="react" />
 /// <reference types="react-dom" />
 /// <reference types="react-data-grid" />
 /// <reference types="three" />
+/// <reference types="axios" />
+/// <reference types="3d-bin-packing" />
 /// <reference path="API.ts" />
 // A '.tsx' file enables JSX support in the TypeScript compiler, 
 // for more information see the following page on the TypeScript wiki:
@@ -17,7 +40,7 @@ var bws;
     (function (packer_1) {
         var demo;
         (function (demo) {
-            var Application = (function (_super) {
+            var Application = /** @class */ (function (_super) {
                 __extends(Application, _super);
                 /* -----------------------------------------------------------
                     CONSTRUCTORS
@@ -38,9 +61,30 @@ var bws;
                     _this.instances = new packer_1.InstanceFormArray();
                     _this.wrappers = new packer_1.WrapperArray();
                     _this.result = new packer_1.WrapperArray();
-                    // INITIAL, EXMAPLE DATA
-                    _this.wrappers.push(new packer_1.Wrapper("Large", 1000, 40, 40, 15, 0), new packer_1.Wrapper("Medium", 700, 20, 20, 10, 0), new packer_1.Wrapper("Small", 500, 15, 15, 8, 0));
-                    _this.instances.push(new packer_1.InstanceForm(new packer_1.Product("Eraser", 1, 2, 5), 15), new packer_1.InstanceForm(new packer_1.Product("Book", 15, 30, 3), 15), new packer_1.InstanceForm(new packer_1.Product("Drink", 3, 3, 10), 15), new packer_1.InstanceForm(new packer_1.Product("Umbrella", 5, 5, 20), 15), new packer_1.InstanceForm(new packer_1.Product("Notebook-Box", 30, 40, 4), 15), new packer_1.InstanceForm(new packer_1.Product("Tablet-Box", 20, 28, 2), 15));
+                    _this.state = { solidCheck: false };
+                    _this.recordWrapper = null;
+                    // Promise.all([
+                    // 	axios.get('http://192.168.199.121:3001/packer/getWrapper'),
+                    // 	axios.get('http://192.168.199.121:3001/packer/getGoods')
+                    // ]).then(([{data: wrapper}, {data: goods}]) => {
+                    // 	// INITIAL, EXMAPLE DATA
+                    // 	this.wrappers.push(new Wrapper(wrapper.name, 1000, wrapper.w, wrapper.h, wrapper.l, wrapper.thickness))
+                    // 	goods.forEach(good => {
+                    // 		this.instances.push(new InstanceForm(new Product(good.name, good.w, good.l, good.h), good.count))
+                    // 	})
+                    // 	this.pack()
+                    // })
+                    axios.get('http://192.168.199.121:3001/packer/getAllInfo').then(function (_a) {
+                        var data = _a.data;
+                        if (data.success) {
+                            var info = data.object;
+                            _this.wrappers.push(new packer_1.Wrapper('TRUCK', 1000, info.vehicleWidth, info.VehicleHeight, info.vehicleLength, 0));
+                            info.packageList.forEach(function (good) {
+                                _this.instances.push(new packer_1.InstanceForm(new packer_1.Product(good.name, good.width, good.height, good.length, good.color), good.sum));
+                            });
+                            _this.pack();
+                        }
+                    });
                     return _this;
                 }
                 /* -----------------------------------------------------------
@@ -69,31 +113,49 @@ var bws;
                     this.drawWrapper(this.result.front());
                     this.refs["tabNavigator"].setState({ selectedIndex: 1 });
                 };
+                Application.prototype.updateRecrodWrapper = function (wrapper, index) {
+                    this.recordWrapper = { wrapper: wrapper, index: index };
+                };
                 Application.prototype.drawWrapper = function (wrapper, index) {
                     if (index === void 0) { index = wrapper.size(); }
                     // INITIALIZE
                     var div = document.getElementById("wrapper_viewer");
                     var canvas = this.wrapper_to_canvas(wrapper, index); // DRAW
+                    this.recordWrapper = null;
                     // PRINT
                     if (div.hasChildNodes() == true)
                         div.removeChild(div.childNodes[0]);
                     div.appendChild(canvas);
                 };
+                Application.prototype.drawSwitchSolid = function () {
+                    if (this.recordWrapper) {
+                        this.wrapper_to_canvas(this.recordWrapper.wrapper, this.recordWrapper.index);
+                    }
+                    else {
+                        this.drawWrapper(this.result.front());
+                    }
+                };
                 Application.prototype.render = function () {
                     var ret = React.createElement("div", null,
                         React.createElement("div", { style: { width: "100%", height: "100%", fontSize: 12 } },
-                            React.createElement(flex.TabNavigator, { ref: "tabNavigator", style: { width: 400, height: "100%", float: "left" } },
+                            React.createElement(flex.TabNavigator, { ref: "tabNavigator", solidCheck: this.state.solidCheck, handle_selectSolid: this.handle_selectSolid.bind(this), style: { width: 400, height: "100%", float: "left" } },
                                 React.createElement(flex.NavigatorContent, { label: "First Tab" },
                                     React.createElement(demo.ItemEditor, { application: this, instances: this.instances, wrappers: this.wrappers })),
                                 React.createElement(flex.NavigatorContent, { label: "Second Tab" },
                                     React.createElement(demo.ResultViewer, { application: this, wrappers: this.result }))),
-                            React.createElement("div", { id: "wrapper_viewer", style: { height: "100%", overflow: "hidden" } })),
-                        React.createElement("div", { style: { position: "absolute", right: 10, bottom: 10 } },
-                            React.createElement("a", { href: "http://redprinting.co.kr/", target: "_blank" },
-                                React.createElement("img", { src: "images/redprinting_logo.png", width: "250" }))));
+                            React.createElement("div", { id: "wrapper_viewer", style: { height: "100%", overflow: "hidden" } })));
                     return ret;
                 };
+                Application.prototype.handle_selectSolid = function (e) {
+                    var _this = this;
+                    this.setState({
+                        solidCheck: !this.state.solidCheck
+                    }, function () {
+                        _this.drawSwitchSolid();
+                    });
+                };
                 Application.prototype.wrapper_to_canvas = function (wrapper, index) {
+                    //
                     // ---------------------------------------
                     // CONSTRUCTS
                     // ---------------------------------------
@@ -127,7 +189,7 @@ var bws;
                                 width = Application.WRAPPER_BOUNDARY_THICKNESS;
                                 length_1 = Application.WRAPPER_BOUNDARY_THICKNESS;
                                 break;
-                            default:
+                            default: // 5, 6, 7, 8
                                 length_1 = wrapper.getLength() + 2 * Application.WRAPPER_BOUNDARY_THICKNESS;
                                 width = Application.WRAPPER_BOUNDARY_THICKNESS;
                                 height = Application.WRAPPER_BOUNDARY_THICKNESS;
@@ -190,7 +252,8 @@ var bws;
                     // ---------------------------------------
                     // CAMERA, TRACKBALL AND MOUSE
                     // ---------------------------------------
-                    if (this.camera == null) {
+                    if (this.camera == null) // LAZY CREATION
+                     {
                         this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
                         this.camera.position.z = wrapper.size() * 5;
                         this.trackball = new THREE.TrackballControls(this.camera);
@@ -223,7 +286,7 @@ var bws;
                     // ---------------------------------------
                     for (var i = 1; i <= 12; i++) {
                         var boundaryLine = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({
-                            color: 0xFF0000, shading: THREE.FlatShading,
+                            color: '#ddd', shading: THREE.FlatShading,
                             vertexColors: THREE.VertexColors, shininess: 0
                         }));
                         var width = void 0, height = void 0, length_2 = void 0;
@@ -247,7 +310,7 @@ var bws;
                                 width = Application.WRAP_BOUNDARY_THICKNESS;
                                 length_2 = Application.WRAP_BOUNDARY_THICKNESS;
                                 break;
-                            default:
+                            default: // 5, 6, 7, 8
                                 length_2 = wrap.getLength();
                                 width = Application.WRAP_BOUNDARY_THICKNESS;
                                 height = Application.WRAP_BOUNDARY_THICKNESS;
@@ -298,11 +361,11 @@ var bws;
                     // SHAPE
                     // ---------------------------------------
                     if (wrap.color_ == undefined)
-                        wrap.color_ = Math.random() * 0xFFFFFF;
+                        wrap.color_ = wrap.instance.color || Math.random() * 0xFFFFFF;
                     var shape = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
                         color: wrap.color_,
                         opacity: 0.5,
-                        transparent: true
+                        transparent: !this.state.solidCheck
                     }));
                     shape.scale.set(wrap.getLayoutWidth(), wrap.getLayoutHeight(), wrap.getLength());
                     shape.position.set(wrap.getX() + wrap.getLayoutWidth() / 2, wrap.getY() + wrap.getLayoutHeight() / 2, wrap.getZ() + wrap.getLength() / 2);
@@ -327,10 +390,10 @@ var bws;
                 Application.main = function () {
                     ReactDOM.render(React.createElement(Application, null), document.body);
                 };
+                Application.WRAPPER_BOUNDARY_THICKNESS = 0.5;
+                Application.WRAP_BOUNDARY_THICKNESS = 0.1;
                 return Application;
             }(React.Component));
-            Application.WRAPPER_BOUNDARY_THICKNESS = 0.5;
-            Application.WRAP_BOUNDARY_THICKNESS = 0.1;
             demo.Application = Application;
         })(demo = packer_1.demo || (packer_1.demo = {}));
     })(packer = bws.packer || (bws.packer = {}));
@@ -345,7 +408,7 @@ var bws;
     (function (packer) {
         var demo;
         (function (demo) {
-            var Editor = (function (_super) {
+            var Editor = /** @class */ (function (_super) {
                 __extends(Editor, _super);
                 /* ------------------------------------------------------------
                     CONSTRUCTORS
@@ -374,6 +437,7 @@ var bws;
                         this.props.dataProvider.erase(this.props.dataProvider.begin().advance(this.selected_index));
                     }
                     catch (exception) {
+                        // OUT OF RANGE 
                     }
                 };
                 /* ------------------------------------------------------------
@@ -418,10 +482,10 @@ var bws;
     (function (packer) {
         var demo;
         (function (demo) {
-            var ItemEditor = (function (_super) {
+            var ItemEditor = /** @class */ (function (_super) {
                 __extends(ItemEditor, _super);
                 function ItemEditor() {
-                    return _super.apply(this, arguments) || this;
+                    return _super !== null && _super.apply(this, arguments) || this;
                 }
                 ItemEditor.prototype.clear = function (event) {
                     this.props.instances.clear();
@@ -458,24 +522,9 @@ var bws;
                                 React.createElement("tr", null,
                                     React.createElement("td", null,
                                         " ",
-                                        React.createElement("img", { src: "images/newFile.png", onClick: this.clear.bind(this) }),
-                                        " "),
-                                    React.createElement("td", null,
-                                        " ",
-                                        React.createElement("img", { src: "images/openFile.png", onClick: this.open.bind(this) }),
-                                        " "),
-                                    React.createElement("td", null,
-                                        " ",
-                                        React.createElement("img", { src: "images/saveFile.png", onClick: this.save.bind(this) }),
-                                        " "),
-                                    React.createElement("td", null,
-                                        " ",
                                         React.createElement("img", { src: "images/document.png", onClick: this.pack.bind(this) }),
                                         " ")),
                                 React.createElement("tr", null,
-                                    React.createElement("td", null, " New File "),
-                                    React.createElement("td", null, " Open File "),
-                                    React.createElement("td", null, " Save File "),
                                     React.createElement("td", null, " Pack ")))),
                         React.createElement("hr", null),
                         React.createElement("p", null,
@@ -491,10 +540,10 @@ var bws;
                 return ItemEditor;
             }(React.Component));
             demo.ItemEditor = ItemEditor;
-            var InstanceEditor = (function (_super) {
+            var InstanceEditor = /** @class */ (function (_super) {
                 __extends(InstanceEditor, _super);
                 function InstanceEditor() {
-                    return _super.apply(this, arguments) || this;
+                    return _super !== null && _super.apply(this, arguments) || this;
                 }
                 InstanceEditor.prototype.createColumns = function () {
                     var columns = [
@@ -509,10 +558,10 @@ var bws;
                 return InstanceEditor;
             }(demo.Editor));
             demo.InstanceEditor = InstanceEditor;
-            var WrapperEditor = (function (_super) {
+            var WrapperEditor = /** @class */ (function (_super) {
                 __extends(WrapperEditor, _super);
                 function WrapperEditor() {
-                    return _super.apply(this, arguments) || this;
+                    return _super !== null && _super.apply(this, arguments) || this;
                 }
                 WrapperEditor.prototype.createColumns = function () {
                     var columns = [
@@ -541,14 +590,16 @@ var bws;
     (function (packer) {
         var demo;
         (function (demo) {
-            var ResultViewer = (function (_super) {
+            var ResultViewer = /** @class */ (function (_super) {
                 __extends(ResultViewer, _super);
                 function ResultViewer() {
-                    return _super.apply(this, arguments) || this;
+                    return _super !== null && _super.apply(this, arguments) || this;
                 }
                 ResultViewer.prototype.drawWrapper = function (wrapper, index) {
                     if (index === void 0) { index = wrapper.size(); }
+                    console.log(this.props.application);
                     this.props.application.drawWrapper(wrapper, index);
+                    this.props.application.updateRecrodWrapper(wrapper, index);
                 };
                 ResultViewer.prototype.clear = function (event) {
                     this.props.wrappers.clear();
@@ -589,23 +640,8 @@ var bws;
                     var ret = React.createElement("div", null,
                         React.createElement("table", { style: { textAlign: "center" } },
                             React.createElement("tbody", null,
-                                React.createElement("tr", null,
-                                    React.createElement("td", null,
-                                        " ",
-                                        React.createElement("img", { src: "images/newFile.png", onClick: this.clear.bind(this) }),
-                                        " "),
-                                    React.createElement("td", null,
-                                        " ",
-                                        React.createElement("img", { src: "images/openFile.png", onClick: this.open.bind(this) }),
-                                        " "),
-                                    React.createElement("td", null,
-                                        " ",
-                                        React.createElement("img", { src: "images/saveFile.png", onClick: this.save.bind(this) }),
-                                        " ")),
-                                React.createElement("tr", null,
-                                    React.createElement("td", null, " New File "),
-                                    React.createElement("td", null, " Open File "),
-                                    React.createElement("td", null, " Save File ")))),
+                                React.createElement("tr", null),
+                                React.createElement("tr", null))),
                         React.createElement("hr", null),
                         React.createElement("p", null, " Optimization Result "),
                         React.createElement("ul", null,
@@ -630,7 +666,7 @@ var bws;
                 return ResultViewer;
             }(React.Component));
             demo.ResultViewer = ResultViewer;
-            var WrapperGrid = (function (_super) {
+            var WrapperGrid = /** @class */ (function (_super) {
                 __extends(WrapperGrid, _super);
                 /* ------------------------------------------------------------
                     CONSTRUCTORS
@@ -657,7 +693,7 @@ var bws;
                     get: function () {
                         return this.props.viewer.props.wrappers;
                     },
-                    enumerable: true,
+                    enumerable: false,
                     configurable: true
                 });
                 WrapperGrid.prototype.get_row = function (index) {
@@ -680,7 +716,7 @@ var bws;
                 };
                 return WrapperGrid;
             }(React.Component));
-            var WrapGrid = (function (_super) {
+            var WrapGrid = /** @class */ (function (_super) {
                 __extends(WrapGrid, _super);
                 /* ------------------------------------------------------------
                     CONSTRUCTORS
@@ -695,7 +731,17 @@ var bws;
                         [
                             { key: "$instanceName", name: "Name", width: 120 },
                             { key: "$layoutScale", name: "layoutScale", width: 90 },
-                            { key: "$position", name: "Position", width: 90 }
+                            { key: "$position", name: "Position", width: 90 },
+                            { key: '$color', name: 'Color', width: 50, formatter: function (obj) {
+                                    var style = function (color) {
+                                        return {
+                                            width: '35px',
+                                            height: '35px',
+                                            background: color
+                                        };
+                                    };
+                                    return React.createElement("div", { style: style(obj.value) });
+                                } }
                         ];
                     return _this;
                 }
@@ -717,7 +763,7 @@ var bws;
                                 return wrappers.front();
                         }
                     },
-                    enumerable: true,
+                    enumerable: false,
                     configurable: true
                 });
                 WrapGrid.prototype.get_row = function (index) {
@@ -745,16 +791,16 @@ var bws;
 // https://github.com/Microsoft/TypeScript/wiki/JSX
 var flex;
 (function (flex) {
-    var TabNavigator = (function (_super) {
+    var TabNavigator = /** @class */ (function (_super) {
         __extends(TabNavigator, _super);
         function TabNavigator() {
-            return _super.apply(this, arguments) || this;
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         TabNavigator.prototype.render = function () {
             if (this.state == null)
-                this.state = { selectedIndex: this.props.selectedIndex };
+                this.state = { selectedIndex: this.props.selectedIndex, solidCheck: false };
             if (this.state.selectedIndex == undefined)
-                this.state = { selectedIndex: 0 };
+                this.state = { selectedIndex: 0, solidCheck: false };
             var children = this.props.children;
             var selected = children[this.state.selectedIndex];
             var tabs = [];
@@ -765,9 +811,16 @@ var flex;
                     React.createElement("a", { href: "#", className: className, onClick: this.handle_change.bind(this, i) }, child.props.label));
                 tabs.push(label);
             }
-            var ret = React.createElement("div", { className: "tabNavigator", style: this.props.style },
+            var ret = React.createElement("div", { className: "tabNavigator", style: __assign(__assign({}, this.props.style), { position: 'relative' }) },
                 React.createElement("ul", { className: "tabNavigator_label" }, tabs),
-                selected);
+                selected,
+                React.createElement("div", { style: {
+                        position: 'absolute',
+                        top: '5px',
+                        right: '5px'
+                    } },
+                    React.createElement("input", { type: "checkbox", onChange: this.props.handle_selectSolid, style: { 'vertical-align': 'middle' }, defaultChecked: this.props.solidCheck }),
+                    "\u5B9E\u5FC3"));
             return ret;
         };
         TabNavigator.prototype.handle_change = function (index, event) {
@@ -776,10 +829,10 @@ var flex;
         return TabNavigator;
     }(React.Component));
     flex.TabNavigator = TabNavigator;
-    var NavigatorContent = (function (_super) {
+    var NavigatorContent = /** @class */ (function (_super) {
         __extends(NavigatorContent, _super);
         function NavigatorContent() {
-            return _super.apply(this, arguments) || this;
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         NavigatorContent.prototype.render = function () {
             return React.createElement("div", { className: "tabNavigator_content" }, this.props.children);

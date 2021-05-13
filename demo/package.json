@@ -18,6 +18,7 @@
   "homepage": "https://github.com/betterwaysystems/packer#readme",
   "dependencies": {
     "@types/3d-bin-packing": "0.0.4",
+    "@types/axios": "^0.14.0",
     "@types/react": "^0.14.55",
     "@types/react-data-grid": "^1.0.6",
     "@types/react-dom": "^0.14.19",

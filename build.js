@@ -24,7 +24,7 @@ function attach_header()
 
 function minify()
 {
-	//minifier.minify("./lib/3d-bin-packing.js");
+	//minifier.minify("./lib/");
 }
 
 function distribute()
@@ -44,4 +44,6 @@ function distribute()
 		fs.readFileSync("./lib/3d-bin-packing.js", "utf8"), 
 		"utf8"
 	);
+
+	console.log('Build success')
 }

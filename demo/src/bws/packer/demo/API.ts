@@ -2,6 +2,7 @@
 /// <reference types="react-dom" />
 /// <reference types="react-data-grid" />
 /// <reference types="three" />
+/// <reference types="axios" />
 
 /// <reference types="3d-bin-packing" />
 

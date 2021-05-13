@@ -32,6 +32,11 @@
 		getLength(): number;
 
 		/**
+		 * Get color, color on the Z-axis in 3D.
+		 */
+		getColor(): string;
+
+		/**
 		 * Get (calculate) volume.
 		 *
 		 * @return width x height x length
