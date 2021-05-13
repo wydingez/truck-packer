@@ -10,5 +10,6 @@ Desktop.ini
 # ======================================================
 *.bat
 .gitattribute
+.vscode
 
 node_modules
