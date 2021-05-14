@@ -74,7 +74,10 @@ var bws;
                     // 	})
                     // 	this.pack()
                     // })
-                    axios.get('http://192.168.199.121:3001/packer/getAllInfo').then(function (_a) {
+                    axios.post('/poc-service/tmsRecycleOrder/getLoadInfo', {
+                        tmsVehicleId: Number(_this.getUrlParams('vid')),
+                        tmsShipOrderIds: _this.getUrlParams('oids') ? _this.getUrlParams('oids').split(',').map(function (i) { return Number(i); }) : _this.getUrlParams('oids')
+                    }).then(function (_a) {
                         var data = _a.data;
                         if (data.success) {
                             var info = data.object;
@@ -87,6 +90,15 @@ var bws;
                     });
                     return _this;
                 }
+                Application.prototype.getUrlParams = function (key) {
+                    var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
+                    var r = window.location.search.substr(1).match(reg);
+                    var ret = '';
+                    if (r != null) {
+                        ret = unescape(r[2]);
+                    }
+                    return ret;
+                };
                 /* -----------------------------------------------------------
                     PROCEDURES
                 ----------------------------------------------------------- */

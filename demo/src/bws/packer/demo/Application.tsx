@@ -46,8 +46,10 @@ namespace bws.packer.demo
 
 			// 	this.pack()
 			// })
-
-			axios.get('http://192.168.199.121:3001/packer/getAllInfo').then(({data}) => {
+			axios.post('/poc-service/tmsRecycleOrder/getLoadInfo', {
+				tmsVehicleId: Number(this.getUrlParams('vid')),
+				tmsShipOrderIds: this.getUrlParams('oids') ? this.getUrlParams('oids').split(',').map(i => Number(i)) : this.getUrlParams('oids')
+			}).then(({data}) => {
 				if(data.success) {
 					let info = data.object
 
@@ -60,6 +62,19 @@ namespace bws.packer.demo
 					this.pack()
 				}
 			})
+		}
+
+		public getUrlParams (key: string) : string {
+			let reg: RegExp = new RegExp(`(^|&)${key}=([^&]*)(&|$)`)
+			let r: RegExpMatchArray = window.location.search.substr(1).match(reg)
+
+			let ret: string = ''
+			
+			if (r != null) {
+				ret = unescape(r[2])
+			}
+
+			return ret
 		}
 
 		/* -----------------------------------------------------------
