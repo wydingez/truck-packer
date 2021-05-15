@@ -7,7 +7,7 @@
 namespace bws.packer.demo
 {
 	export class Application
-		extends React.Component<{solidCheck: boolean}, {solidCheck: boolean}>
+		extends React.Component<{solidCheck?: boolean, instances?: InstanceFormArray, wrappers?: WrapperArray}, {solidCheck?: boolean, instances?: InstanceFormArray, wrappers?: WrapperArray}>
 	{
 		private instances: InstanceFormArray;
 		private wrappers: WrapperArray;
@@ -25,43 +25,79 @@ namespace bws.packer.demo
 		public constructor()
 		{
 			super();
-
-			this.instances = new InstanceFormArray();
-			this.wrappers = new WrapperArray();
+			
+			// this.instances = new InstanceFormArray();
+			// this.wrappers = new WrapperArray();
 			this.result = new WrapperArray();
 
-			this.state = { solidCheck: false }
+			this.state = { solidCheck: false, instances: new InstanceFormArray(), wrappers: new WrapperArray() }
 			this.recordWrapper = null
-
-			// Promise.all([
-			// 	axios.get('http://192.168.199.121:3001/packer/getWrapper'),
-			// 	axios.get('http://192.168.199.121:3001/packer/getGoods')
-			// ]).then(([{data: wrapper}, {data: goods}]) => {
-			// 	// INITIAL, EXMAPLE DATA
-			// 	this.wrappers.push(new Wrapper(wrapper.name, 1000, wrapper.w, wrapper.h, wrapper.l, wrapper.thickness))
-
-			// 	goods.forEach(good => {
-			// 		this.instances.push(new InstanceForm(new Product(good.name, good.w, good.l, good.h), good.count))
+			
+			// setTimeout(() => {
+			// 	let instances = new InstanceFormArray()
+			// 	let wrappers = new WrapperArray()
+				
+			// 	let info = {
+			// 		"vehicleModel": "12.5m",
+			// 		"vehicleNo": "P888888",
+			// 		"vehicleLength": 40,
+			// 		"vehicleWidth": 40,
+			// 		"vehicleHeight": 40,
+			// 		"packageList": [
+			// 			{
+			// 				"partName": "加油管总成1",
+			// 				"length": 1,
+			// 				"width": 5,
+			// 				"height": 10,
+			// 				"sum": 10
+			// 			},
+			// 			{
+			// 				"partName": "加油管总成2",
+			// 				"length": 2,
+			// 				"width": 8,
+			// 				"height": 10,
+			// 				"sum": 1
+			// 			}
+			// 		]
+			// 	}
+	
+			// 	wrappers.push(new Wrapper(info.vehicleNo, 1000, info.vehicleWidth, info.vehicleHeight, info.vehicleLength, 0))
+		
+			// 	info.packageList.forEach(good => {
+			// 		instances.push(new InstanceForm(new Product(good.partName, good.width, good.height, good.length, good.color), good.sum))
 			// 	})
 
-			// 	this.pack()
-			// })
-			axios.post('/poc-service/tmsRecycleOrder/getLoadInfo', {
-				tmsVehicleId: Number(this.getUrlParams('vid')),
-				tmsShipOrderIds: this.getUrlParams('oids') ? this.getUrlParams('oids').split(',').map(i => Number(i)) : this.getUrlParams('oids')
-			}).then(({data}) => {
-				if(data.success) {
-					let info = data.object
+			// 	this.setState({
+			// 		instances,
+			// 		wrappers
+			// 	}, () => {
+			// 		this.pack()
+			// 	})
+			// }, 1000)
 
-					this.wrappers.push(new Wrapper('TRUCK', 1000, info.vehicleWidth, info.VehicleHeight, info.vehicleLength, 0))
+			console.log(222)
 
+			window.addEventListener('message',(event) => {
+				//  if(event.origin !== 'http://davidwalsh.name') return;
+					let instances = new InstanceFormArray()
+					let wrappers = new WrapperArray()
+				 	let info = event.data
+
+					 console.log(111, event.data)
+
+					wrappers.push(new Wrapper(info.vehicleNo, info.vehicleNo, info.vehicleWidth, info.vehicleHeight, info.vehicleLength, 0))
+	
 					info.packageList.forEach(good => {
-						this.instances.push(new InstanceForm(new Product(good.name, good.width, good.height, good.length, good.color), good.sum))
+						instances.push(new InstanceForm(new Product(good.partName, good.width, good.height, good.length, good.color), good.sum))
 					})
 
-					this.pack()
-				}
-			})
+					this.setState({
+						instances,
+						wrappers
+					}, () => {
+						this.pack()
+					})
+			}, false);
 		}
 
 		public getUrlParams (key: string) : string {
@@ -82,7 +118,7 @@ namespace bws.packer.demo
 		----------------------------------------------------------- */
 		public pack(): void
 		{
-			let packer_form: PackerForm = new PackerForm(this.instances, this.wrappers);
+			let packer_form: PackerForm = new PackerForm(this.state.instances, this.state.wrappers);
 
 			/////
 			// FIND THE OPTIMIZED SOLUTION
@@ -114,7 +150,7 @@ namespace bws.packer.demo
 
 		public updateRecrodWrapper (wrapper: Wrapper, index: number) {
 			this.recordWrapper = {wrapper, index}
-		},
+		}
 
 		public drawWrapper(wrapper: Wrapper, index: number = wrapper.size()): void
 		{
@@ -157,11 +193,11 @@ namespace bws.packer.demo
 					<div style={{width: "100%", height: "100%", fontSize: 12}}>
 						<flex.TabNavigator ref="tabNavigator" solidCheck={this.state.solidCheck} handle_selectSolid={this.handle_selectSolid.bind(this)}
 										   style={{ width: 400, height: "100%", float: "left" }}>
-							<flex.NavigatorContent label="First Tab">
+							<flex.NavigatorContent label="装载项">
 								<ItemEditor application={this}
-											instances={this.instances} wrappers={this.wrappers} />
+											instances={this.state.instances} wrappers={this.state.wrappers} />
 							</flex.NavigatorContent>
-							<flex.NavigatorContent label="Second Tab">
+							<flex.NavigatorContent label="装载配置">
 								<ResultViewer application={this} 
 											  wrappers={this.result} />
 							</flex.NavigatorContent>
@@ -189,7 +225,11 @@ namespace bws.packer.demo
 			// CONSTRUCTS
 			// ---------------------------------------
 			// SCENE AND GEOMETRY
+			let wrapperInfo = this.state.wrappers.data_[0]
+
 			this.scene = new THREE.Scene();
+			this.scene.position.set(-wrapperInfo.width / 2, -wrapperInfo.height / 2, - wrapperInfo.length / 2)
+
 			let geometry: THREE.BoxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
 			// BOUNDARY LINES
@@ -292,7 +332,10 @@ namespace bws.packer.demo
 			// ---------------------------------------
 			if (this.camera == null) // LAZY CREATION
 			{
+				let wrapperInf = this.state.wrappers && this.state.wrappers.data_ && this.state.wrappers.data_[0]
+
 				this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
+				this.camera.position.x = -wrapperInf.length / 2
 				this.camera.position.z = wrapper.size() * 5;
 
 				this.trackball = new THREE.TrackballControls(this.camera);

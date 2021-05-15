@@ -58,36 +58,66 @@ var bws;
                     _this.camera = null;
                     _this.trackball = null;
                     _this.mouse = null;
-                    _this.instances = new packer_1.InstanceFormArray();
-                    _this.wrappers = new packer_1.WrapperArray();
+                    // this.instances = new InstanceFormArray();
+                    // this.wrappers = new WrapperArray();
                     _this.result = new packer_1.WrapperArray();
-                    _this.state = { solidCheck: false };
+                    _this.state = { solidCheck: false, instances: new packer_1.InstanceFormArray(), wrappers: new packer_1.WrapperArray() };
                     _this.recordWrapper = null;
-                    // Promise.all([
-                    // 	axios.get('http://192.168.199.121:3001/packer/getWrapper'),
-                    // 	axios.get('http://192.168.199.121:3001/packer/getGoods')
-                    // ]).then(([{data: wrapper}, {data: goods}]) => {
-                    // 	// INITIAL, EXMAPLE DATA
-                    // 	this.wrappers.push(new Wrapper(wrapper.name, 1000, wrapper.w, wrapper.h, wrapper.l, wrapper.thickness))
-                    // 	goods.forEach(good => {
-                    // 		this.instances.push(new InstanceForm(new Product(good.name, good.w, good.l, good.h), good.count))
+                    // setTimeout(() => {
+                    // 	let instances = new InstanceFormArray()
+                    // 	let wrappers = new WrapperArray()
+                    // 	let info = {
+                    // 		"vehicleModel": "12.5m",
+                    // 		"vehicleNo": "P888888",
+                    // 		"vehicleLength": 40,
+                    // 		"vehicleWidth": 40,
+                    // 		"vehicleHeight": 40,
+                    // 		"packageList": [
+                    // 			{
+                    // 				"partName": "加油管总成1",
+                    // 				"length": 1,
+                    // 				"width": 5,
+                    // 				"height": 10,
+                    // 				"sum": 10
+                    // 			},
+                    // 			{
+                    // 				"partName": "加油管总成2",
+                    // 				"length": 2,
+                    // 				"width": 8,
+                    // 				"height": 10,
+                    // 				"sum": 1
+                    // 			}
+                    // 		]
+                    // 	}
+                    // 	wrappers.push(new Wrapper(info.vehicleNo, 1000, info.vehicleWidth, info.vehicleHeight, info.vehicleLength, 0))
+                    // 	info.packageList.forEach(good => {
+                    // 		instances.push(new InstanceForm(new Product(good.partName, good.width, good.height, good.length, good.color), good.sum))
                     // 	})
-                    // 	this.pack()
-                    // })
-                    axios.post('/poc-service/tmsRecycleOrder/getLoadInfo', {
-                        tmsVehicleId: Number(_this.getUrlParams('vid')),
-                        tmsShipOrderIds: _this.getUrlParams('oids') ? _this.getUrlParams('oids').split(',').map(function (i) { return Number(i); }) : _this.getUrlParams('oids')
-                    }).then(function (_a) {
-                        var data = _a.data;
-                        if (data.success) {
-                            var info = data.object;
-                            _this.wrappers.push(new packer_1.Wrapper('TRUCK', 1000, info.vehicleWidth, info.VehicleHeight, info.vehicleLength, 0));
-                            info.packageList.forEach(function (good) {
-                                _this.instances.push(new packer_1.InstanceForm(new packer_1.Product(good.name, good.width, good.height, good.length, good.color), good.sum));
-                            });
+                    // 	this.setState({
+                    // 		instances,
+                    // 		wrappers
+                    // 	}, () => {
+                    // 		this.pack()
+                    // 	})
+                    // }, 1000)
+                    console.log(222);
+                    window.addEventListener('message', function (event) {
+                        //  if(event.origin !== 'http://davidwalsh.name') return;
+                        var instances = new packer_1.InstanceFormArray();
+                        var wrappers = new packer_1.WrapperArray();
+                        var info = event.data;
+                        console.log(111, event.data);
+                        wrappers.push(new packer_1.Wrapper(info.vehicleNo, info.vehicleNo, info.vehicleWidth, info.vehicleHeight, info.vehicleLength, 0));
+                        info.packageList.forEach(function (good) {
+                            instances.push(new packer_1.InstanceForm(new packer_1.Product(good.partName, good.width, good.height, good.length, good.color), good.sum));
+                        });
+                        _this.setState({
+                            instances: instances,
+                            wrappers: wrappers
+                        }, function () {
                             _this.pack();
-                        }
-                    });
+                        });
+                    }, false);
                     return _this;
                 }
                 Application.prototype.getUrlParams = function (key) {
@@ -103,7 +133,7 @@ var bws;
                     PROCEDURES
                 ----------------------------------------------------------- */
                 Application.prototype.pack = function () {
-                    var packer_form = new packer_1.PackerForm(this.instances, this.wrappers);
+                    var packer_form = new packer_1.PackerForm(this.state.instances, this.state.wrappers);
                     /////
                     // FIND THE OPTIMIZED SOLUTION
                     /////
@@ -151,9 +181,9 @@ var bws;
                     var ret = React.createElement("div", null,
                         React.createElement("div", { style: { width: "100%", height: "100%", fontSize: 12 } },
                             React.createElement(flex.TabNavigator, { ref: "tabNavigator", solidCheck: this.state.solidCheck, handle_selectSolid: this.handle_selectSolid.bind(this), style: { width: 400, height: "100%", float: "left" } },
-                                React.createElement(flex.NavigatorContent, { label: "First Tab" },
-                                    React.createElement(demo.ItemEditor, { application: this, instances: this.instances, wrappers: this.wrappers })),
-                                React.createElement(flex.NavigatorContent, { label: "Second Tab" },
+                                React.createElement(flex.NavigatorContent, { label: "\u88C5\u8F7D\u9879" },
+                                    React.createElement(demo.ItemEditor, { application: this, instances: this.state.instances, wrappers: this.state.wrappers })),
+                                React.createElement(flex.NavigatorContent, { label: "\u88C5\u8F7D\u914D\u7F6E" },
                                     React.createElement(demo.ResultViewer, { application: this, wrappers: this.result }))),
                             React.createElement("div", { id: "wrapper_viewer", style: { height: "100%", overflow: "hidden" } })));
                     return ret;
@@ -172,7 +202,9 @@ var bws;
                     // CONSTRUCTS
                     // ---------------------------------------
                     // SCENE AND GEOMETRY
+                    var wrapperInfo = this.state.wrappers.data_[0];
                     this.scene = new THREE.Scene();
+                    this.scene.position.set(-wrapperInfo.width / 2, -wrapperInfo.height / 2, -wrapperInfo.length / 2);
                     var geometry = new THREE.BoxGeometry(1, 1, 1);
                     // BOUNDARY LINES
                     for (var i = 1; i <= 12; i++) {
@@ -266,7 +298,9 @@ var bws;
                     // ---------------------------------------
                     if (this.camera == null) // LAZY CREATION
                      {
+                        var wrapperInf = this.state.wrappers && this.state.wrappers.data_ && this.state.wrappers.data_[0];
                         this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
+                        this.camera.position.x = -wrapperInf.length / 2;
                         this.camera.position.z = wrapper.size() * 5;
                         this.trackball = new THREE.TrackballControls(this.camera);
                         this.trackball.rotateSpeed = 10;
@@ -471,11 +505,9 @@ var bws;
                     this.props.dataProvider.addEventListener("insert", this.handle_data_change, this);
                     this.props.dataProvider.addEventListener("erase", this.handle_data_change, this);
                     var ret = React.createElement("div", null,
-                        React.createElement("h3", null, " Type of wrappers to pack "),
+                        React.createElement("h3", null, " \u88C5\u8F7D\u8D27\u7269\u5217\u8868 "),
                         React.createElement(ReactDataGrid, { rowGetter: this.get_row.bind(this), rowsCount: this.props.dataProvider.size(), columns: this.columns, onRowUpdated: this.handle_row_change.bind(this), onCellSelected: this.handle_select.bind(this), enableCellSelect: true, minHeight: Math.min(document.body.offsetHeight * .3, 40 + this.props.dataProvider.size() * 35) }),
-                        React.createElement("p", { style: { textAlign: "right" } },
-                            React.createElement("button", { onClick: this.insert_instance.bind(this) }, "Insert"),
-                            React.createElement("button", { onClick: this.erase_instances.bind(this) }, "Erase")));
+                        React.createElement("p", { style: { textAlign: "right" } }));
                     return ret;
                 };
                 return Editor;
@@ -537,7 +569,7 @@ var bws;
                                         React.createElement("img", { src: "images/document.png", onClick: this.pack.bind(this) }),
                                         " ")),
                                 React.createElement("tr", null,
-                                    React.createElement("td", null, " Pack ")))),
+                                    React.createElement("td", null, " \u88C5\u8F7D ")))),
                         React.createElement("hr", null),
                         React.createElement("p", null,
                             " ",
@@ -559,11 +591,11 @@ var bws;
                 }
                 InstanceEditor.prototype.createColumns = function () {
                     var columns = [
-                        { key: "$name", name: "Name", editable: true, width: 100 },
-                        { key: "$width", name: "Width", editable: true, width: 60 },
-                        { key: "$height", name: "Height", editable: true, width: 60 },
-                        { key: "$length", name: "Length", editable: true, width: 60 },
-                        { key: "$count", name: "Count", editable: true, width: 60 }
+                        { key: "$name", name: "名称", editable: true, width: 100 },
+                        { key: "$width", name: "宽", editable: true, width: 60 },
+                        { key: "$height", name: "高", editable: true, width: 60 },
+                        { key: "$length", name: "长", editable: true, width: 60 },
+                        { key: "$count", name: "数量", editable: true, width: 60 }
                     ];
                     return columns;
                 };
@@ -577,12 +609,10 @@ var bws;
                 }
                 WrapperEditor.prototype.createColumns = function () {
                     var columns = [
-                        { key: "$name", name: "Name", editable: true, width: 80 },
-                        { key: "$price", name: "Price", editable: true, width: 70 },
-                        { key: "$width", name: "Width", editable: true, width: 45 },
-                        { key: "$height", name: "Height", editable: true, width: 45 },
-                        { key: "$length", name: "Length", editable: true, width: 45 },
-                        { key: "$thickness", name: "Thickness", editable: true, width: 45 }
+                        { key: "$name", name: "名称", editable: true, width: 100 },
+                        { key: "$width", name: "宽", editable: true, width: 60 },
+                        { key: "$height", name: "高", editable: true, width: 60 },
+                        { key: "$length", name: "长", editable: true, width: 60 },
                     ];
                     return columns;
                 };
@@ -655,14 +685,10 @@ var bws;
                                 React.createElement("tr", null),
                                 React.createElement("tr", null))),
                         React.createElement("hr", null),
-                        React.createElement("p", null, " Optimization Result "),
+                        React.createElement("p", null, " \u88C5\u8F7D\u7ED3\u679C "),
                         React.createElement("ul", null,
                             React.createElement("li", null,
-                                " Cost: $ ",
-                                this.props.wrappers.getPrice(),
-                                " "),
-                            React.createElement("li", null,
-                                " Space Utilization: ",
+                                " \u7A7A\u95F4\u5229\u7528\u7387: ",
                                 Math.round(this.props.wrappers.getUtilization() * 10000) / 100.0,
                                 " % ")),
                         React.createElement("hr", null),
@@ -692,9 +718,9 @@ var bws;
                     // CONSTRUCT COLUMNS
                     _this.columns =
                         [
-                            { key: "$name", name: "Name", width: 120 },
-                            { key: "$scale", name: "Length", width: 90 },
-                            { key: "$spaceUtilization", name: "Space Utilization", width: 90 }
+                            { key: "$name", name: "名称", width: 120 },
+                            { key: "$scale", name: "尺寸", width: 90 },
+                            { key: "$spaceUtilization", name: "空间利用率", width: 90 }
                         ];
                     return _this;
                 }
@@ -722,7 +748,7 @@ var bws;
                 ------------------------------------------------------------ */
                 WrapperGrid.prototype.render = function () {
                     var ret = React.createElement("div", null,
-                        React.createElement("h3", null, " List of wrappers."),
+                        React.createElement("h3", null, " \u5BB9\u5668\u5217\u8868"),
                         React.createElement(ReactDataGrid, { rowGetter: this.get_row.bind(this), rowsCount: this.wrappers.size(), columns: this.columns, enableCellSelect: true, onCellSelected: this.handle_select.bind(this), minHeight: Math.min(document.body.offsetHeight * .3, 40 + this.wrappers.size() * 35) }));
                     return ret;
                 };
@@ -741,10 +767,10 @@ var bws;
                     // CONSTRUCT COLUMNS
                     _this.columns =
                         [
-                            { key: "$instanceName", name: "Name", width: 120 },
-                            { key: "$layoutScale", name: "layoutScale", width: 90 },
-                            { key: "$position", name: "Position", width: 90 },
-                            { key: '$color', name: 'Color', width: 50, formatter: function (obj) {
+                            { key: "$instanceName", name: "名称", width: 120 },
+                            { key: "$layoutScale", name: "宽, 高, 长", width: 90 },
+                            { key: "$position", name: "坐标", width: 90 },
+                            { key: '$color', name: '颜色', width: 50, formatter: function (obj) {
                                     var style = function (color) {
                                         return {
                                             width: '35px',
@@ -789,7 +815,7 @@ var bws;
                 ------------------------------------------------------------ */
                 WrapGrid.prototype.render = function () {
                     var ret = React.createElement("div", null,
-                        React.createElement("h3", null, " Instances packed in a Wrapper."),
+                        React.createElement("h3", null, " \u5355\u4E2A\u5BB9\u5668\u88C5\u8F7D\u5B9E\u4F8B "),
                         React.createElement(ReactDataGrid, { rowGetter: this.get_row.bind(this), rowsCount: this.wrapper.size(), columns: this.columns, enableCellSelect: true, onCellSelected: this.handle_select.bind(this), minHeight: Math.min(document.body.offsetHeight * .3, 40 + this.wrapper.size() * 35) }));
                     return ret;
                 };

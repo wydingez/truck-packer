@@ -71,7 +71,7 @@ namespace bws.packer.demo
 							{/* <td> New File </td>
 							<td> Open File </td>
 							<td> Save File </td> */}
-							<td> Pack </td>
+							<td> 装载 </td>
 						</tr>
 					</tbody>
 					</table>
@@ -89,11 +89,11 @@ namespace bws.packer.demo
 		{
 			let columns: AdazzleReactDataGrid.Column[] = 
 				[
-					{ key: "$name", name: "Name", editable: true, width: 100 },
-					{ key: "$width", name: "Width", editable: true, width: 60 },
-					{ key: "$height", name: "Height", editable: true, width: 60 },
-					{ key: "$length", name: "Length", editable: true, width: 60 },
-					{ key: "$count", name: "Count", editable: true, width: 60 }
+					{ key: "$name", name: "名称", editable: true, width: 100 },
+					{ key: "$width", name: "宽", editable: true, width: 60 },
+					{ key: "$height", name: "高", editable: true, width: 60 },
+					{ key: "$length", name: "长", editable: true, width: 60 },
+					{ key: "$count", name: "数量", editable: true, width: 60 }
 				];
 			return columns;
 		}
@@ -105,12 +105,10 @@ namespace bws.packer.demo
 		{
 			let columns: AdazzleReactDataGrid.Column[] =
 				[
-					{ key: "$name", name: "Name", editable: true, width: 80 },
-					{ key: "$price", name: "Price", editable: true, width: 70 },
-					{ key: "$width", name: "Width", editable: true, width: 45 },
-					{ key: "$height", name: "Height", editable: true, width: 45 },
-					{ key: "$length", name: "Length", editable: true, width: 45 },
-					{ key: "$thickness", name: "Thickness", editable: true, width: 45 }
+					{ key: "$name", name: "名称", editable: true, width: 100 },
+					{ key: "$width", name: "宽", editable: true, width: 60 },
+					{ key: "$height", name: "高", editable: true, width: 60 },
+					{ key: "$length", name: "长", editable: true, width: 60 },
 				];
 			return columns;
 		}

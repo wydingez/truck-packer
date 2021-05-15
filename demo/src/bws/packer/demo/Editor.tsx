@@ -81,7 +81,7 @@ namespace bws.packer.demo
 
 			let ret: JSX.Element =
 				<div>
-					<h3> Type of wrappers to pack </h3>
+					<h3> 装载货物列表 </h3>
 					<ReactDataGrid rowGetter={this.get_row.bind(this)}
 								   rowsCount={this.props.dataProvider.size()}
 								   columns={this.columns} 
@@ -92,8 +92,8 @@ namespace bws.packer.demo
 						
 								   minHeight={Math.min(document.body.offsetHeight * .3, 40 + this.props.dataProvider.size() * 35)} />
 					<p style={{ textAlign: "right" }}>
-						<button onClick={this.insert_instance.bind(this) }>Insert</button>
-						<button onClick={this.erase_instances.bind(this) }>Erase</button>
+						{/* <button onClick={this.insert_instance.bind(this) }>Insert</button>
+						<button onClick={this.erase_instances.bind(this) }>Erase</button> */}
 					</p>
 				</div>;
 			return ret;

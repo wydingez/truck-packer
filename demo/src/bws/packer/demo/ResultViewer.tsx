@@ -85,10 +85,9 @@ namespace bws.packer.demo
 						</tbody>
 					</table>
 					<hr />
-					<p> Optimization Result </p>
+					<p> 装载结果 </p>
 					<ul>
-						<li> Cost: $ {this.props.wrappers.getPrice()} </li>
-						<li> Space Utilization: {Math.round(this.props.wrappers.getUtilization() * 10000) / 100.0} % </li>
+						<li> 空间利用率: {Math.round(this.props.wrappers.getUtilization() * 10000) / 100.0} % </li>
 					</ul>
 					<hr />
 					<p> <WrapperGrid ref="wrapperGrid"
@@ -123,9 +122,9 @@ namespace bws.packer.demo
 			// CONSTRUCT COLUMNS
 			this.columns =
 				[
-					{ key: "$name", name: "Name", width: 120 },
-					{ key: "$scale", name: "Length", width: 90 },
-					{ key: "$spaceUtilization", name: "Space Utilization", width: 90 }
+					{ key: "$name", name: "名称", width: 120 },
+					{ key: "$scale", name: "尺寸", width: 90 },
+					{ key: "$spaceUtilization", name: "空间利用率", width: 90 }
 				];
 		}
 
@@ -158,7 +157,7 @@ namespace bws.packer.demo
 		{
 			let ret: JSX.Element =
 				<div>
-					<h3> List of wrappers.</h3>
+					<h3> 容器列表</h3>
 					<ReactDataGrid rowGetter={this.get_row.bind(this) }
 								   rowsCount={this.wrappers.size() }
 								   columns={this.columns}
@@ -191,10 +190,10 @@ namespace bws.packer.demo
 			// CONSTRUCT COLUMNS
 			this.columns =
 				[
-					{ key: "$instanceName", name: "Name", width: 120 },
-					{ key: "$layoutScale", name: "layoutScale", width: 90 },
-					{ key: "$position", name: "Position", width: 90 },
-					{ key: '$color', name: 'Color', width: 50, formatter: (obj: any) => {
+					{ key: "$instanceName", name: "名称", width: 120 },
+					{ key: "$layoutScale", name: "宽, 高, 长", width: 90 },
+					{ key: "$position", name: "坐标", width: 90 },
+					{ key: '$color', name: '颜色', width: 50, formatter: (obj: any) => {
 
 						let style = (color: string) => {
 							return {
@@ -247,7 +246,7 @@ namespace bws.packer.demo
 		{
 			let ret: JSX.Element =
 				<div>
-					<h3> Instances packed in a Wrapper.</h3>
+					<h3> 单个容器装载实例 </h3>
 					<ReactDataGrid rowGetter={this.get_row.bind(this) }
 						rowsCount={this.wrapper.size()}
 						columns={this.columns}
