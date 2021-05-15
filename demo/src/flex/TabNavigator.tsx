@@ -43,6 +43,7 @@ namespace flex
 						top: '5px',
 						right: '5px'
 					}}>
+						<button onClick={this.props.handle_reset}>还原</button>
 						<input 
 							type="checkbox" 
 							onChange={this.props.handle_selectSolid} 
@@ -74,7 +75,8 @@ namespace flex
 		selectedIndex?: number;
 		solidCheck?: boolean;
 		style?: React.CSSProperties;
-		handle_selectSolid?: any
+		handle_selectSolid?: any,
+		handle_reset?: any
 	}
 	export interface NavigatorContentProps extends React.Props<NavigatorContent>
 	{

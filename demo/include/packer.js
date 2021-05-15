@@ -63,43 +63,36 @@ var bws;
                     _this.result = new packer_1.WrapperArray();
                     _this.state = { solidCheck: false, instances: new packer_1.InstanceFormArray(), wrappers: new packer_1.WrapperArray() };
                     _this.recordWrapper = null;
-                    // setTimeout(() => {
-                    // 	let instances = new InstanceFormArray()
-                    // 	let wrappers = new WrapperArray()
-                    // 	let info = {
-                    // 		"vehicleModel": "12.5m",
-                    // 		"vehicleNo": "P888888",
-                    // 		"vehicleLength": 40,
-                    // 		"vehicleWidth": 40,
-                    // 		"vehicleHeight": 40,
-                    // 		"packageList": [
-                    // 			{
-                    // 				"partName": "加油管总成1",
-                    // 				"length": 1,
-                    // 				"width": 5,
-                    // 				"height": 10,
-                    // 				"sum": 10
-                    // 			},
-                    // 			{
-                    // 				"partName": "加油管总成2",
-                    // 				"length": 2,
-                    // 				"width": 8,
-                    // 				"height": 10,
-                    // 				"sum": 1
-                    // 			}
-                    // 		]
-                    // 	}
-                    // 	wrappers.push(new Wrapper(info.vehicleNo, 1000, info.vehicleWidth, info.vehicleHeight, info.vehicleLength, 0))
-                    // 	info.packageList.forEach(good => {
-                    // 		instances.push(new InstanceForm(new Product(good.partName, good.width, good.height, good.length, good.color), good.sum))
-                    // 	})
-                    // 	this.setState({
-                    // 		instances,
-                    // 		wrappers
-                    // 	}, () => {
-                    // 		this.pack()
-                    // 	})
-                    // }, 1000)
+                    setTimeout(function () {
+                        var instances = new packer_1.InstanceFormArray();
+                        var wrappers = new packer_1.WrapperArray();
+                        var info = {
+                            "vehicleModel": "12.5m",
+                            "vehicleNo": "P888888",
+                            "vehicleLength": 1250,
+                            "vehicleWidth": 250,
+                            "vehicleHeight": 250,
+                            "packageList": [
+                                {
+                                    "partName": "加油管总成1",
+                                    "length": 60,
+                                    "width": 40,
+                                    "height": 28,
+                                    "sum": 10
+                                }
+                            ]
+                        };
+                        wrappers.push(new packer_1.Wrapper(info.vehicleNo, 1000, info.vehicleWidth, info.vehicleHeight, info.vehicleLength, 0));
+                        info.packageList.forEach(function (good) {
+                            instances.push(new packer_1.InstanceForm(new packer_1.Product(good.partName, good.width, good.height, good.length, good.color), good.sum));
+                        });
+                        _this.setState({
+                            instances: instances,
+                            wrappers: wrappers
+                        }, function () {
+                            _this.pack();
+                        });
+                    }, 1000);
                     console.log(222);
                     window.addEventListener('message', function (event) {
                         //  if(event.origin !== 'http://davidwalsh.name') return;
@@ -180,7 +173,7 @@ var bws;
                 Application.prototype.render = function () {
                     var ret = React.createElement("div", null,
                         React.createElement("div", { style: { width: "100%", height: "100%", fontSize: 12 } },
-                            React.createElement(flex.TabNavigator, { ref: "tabNavigator", solidCheck: this.state.solidCheck, handle_selectSolid: this.handle_selectSolid.bind(this), style: { width: 400, height: "100%", float: "left" } },
+                            React.createElement(flex.TabNavigator, { ref: "tabNavigator", solidCheck: this.state.solidCheck, handle_selectSolid: this.handle_selectSolid.bind(this), handle_reset: this.handle_reset.bind(this), style: { width: 400, height: "100%", float: "left" } },
                                 React.createElement(flex.NavigatorContent, { label: "\u88C5\u8F7D\u9879" },
                                     React.createElement(demo.ItemEditor, { application: this, instances: this.state.instances, wrappers: this.state.wrappers })),
                                 React.createElement(flex.NavigatorContent, { label: "\u88C5\u8F7D\u914D\u7F6E" },
@@ -195,6 +188,21 @@ var bws;
                     }, function () {
                         _this.drawSwitchSolid();
                     });
+                };
+                Application.prototype.handle_reset = function () {
+                    var wrapperInf = this.state.wrappers && this.state.wrappers.data_ && this.state.wrappers.data_[0];
+                    this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
+                    this.camera.position.x = -wrapperInf.length / 1.5;
+                    this.camera.position.z = this.result.front().size() * 5;
+                    this.trackball = new THREE.TrackballControls(this.camera);
+                    this.trackball.rotateSpeed = 10;
+                    this.trackball.zoomSpeed = 1.2;
+                    this.trackball.panSpeed = 0.8;
+                    this.trackball.noZoom = false;
+                    this.trackball.noPan = false;
+                    this.trackball.staticMoving = true;
+                    this.trackball.dynamicDampingFactor = 0.3;
+                    this.render_three();
                 };
                 Application.prototype.wrapper_to_canvas = function (wrapper, index) {
                     //
@@ -300,7 +308,7 @@ var bws;
                      {
                         var wrapperInf = this.state.wrappers && this.state.wrappers.data_ && this.state.wrappers.data_[0];
                         this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
-                        this.camera.position.x = -wrapperInf.length / 2;
+                        this.camera.position.x = -wrapperInf.length / 1.5;
                         this.camera.position.z = wrapper.size() * 5;
                         this.trackball = new THREE.TrackballControls(this.camera);
                         this.trackball.rotateSpeed = 10;
@@ -857,6 +865,7 @@ var flex;
                         top: '5px',
                         right: '5px'
                     } },
+                    React.createElement("button", { onClick: this.props.handle_reset }, "\u8FD8\u539F"),
                     React.createElement("input", { type: "checkbox", onChange: this.props.handle_selectSolid, style: { 'vertical-align': 'middle' }, defaultChecked: this.props.solidCheck }),
                     "\u5B9E\u5FC3"));
             return ret;

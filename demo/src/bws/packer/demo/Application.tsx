@@ -33,47 +33,40 @@ namespace bws.packer.demo
 			this.state = { solidCheck: false, instances: new InstanceFormArray(), wrappers: new WrapperArray() }
 			this.recordWrapper = null
 			
-			// setTimeout(() => {
-			// 	let instances = new InstanceFormArray()
-			// 	let wrappers = new WrapperArray()
+			setTimeout(() => {
+				let instances = new InstanceFormArray()
+				let wrappers = new WrapperArray()
 				
-			// 	let info = {
-			// 		"vehicleModel": "12.5m",
-			// 		"vehicleNo": "P888888",
-			// 		"vehicleLength": 40,
-			// 		"vehicleWidth": 40,
-			// 		"vehicleHeight": 40,
-			// 		"packageList": [
-			// 			{
-			// 				"partName": "加油管总成1",
-			// 				"length": 1,
-			// 				"width": 5,
-			// 				"height": 10,
-			// 				"sum": 10
-			// 			},
-			// 			{
-			// 				"partName": "加油管总成2",
-			// 				"length": 2,
-			// 				"width": 8,
-			// 				"height": 10,
-			// 				"sum": 1
-			// 			}
-			// 		]
-			// 	}
+				let info = {
+					"vehicleModel": "12.5m",
+					"vehicleNo": "P888888",
+					"vehicleLength": 1250,
+					"vehicleWidth": 250,
+					"vehicleHeight": 250,
+					"packageList": [
+						{
+							"partName": "加油管总成1",
+							"length": 60,
+							"width": 40,
+							"height": 28,
+							"sum": 10
+						}
+					]
+				}
 	
-			// 	wrappers.push(new Wrapper(info.vehicleNo, 1000, info.vehicleWidth, info.vehicleHeight, info.vehicleLength, 0))
+				wrappers.push(new Wrapper(info.vehicleNo, 1000, info.vehicleWidth, info.vehicleHeight, info.vehicleLength, 0))
 		
-			// 	info.packageList.forEach(good => {
-			// 		instances.push(new InstanceForm(new Product(good.partName, good.width, good.height, good.length, good.color), good.sum))
-			// 	})
+				info.packageList.forEach(good => {
+					instances.push(new InstanceForm(new Product(good.partName, good.width, good.height, good.length, good.color), good.sum))
+				})
 
-			// 	this.setState({
-			// 		instances,
-			// 		wrappers
-			// 	}, () => {
-			// 		this.pack()
-			// 	})
-			// }, 1000)
+				this.setState({
+					instances,
+					wrappers
+				}, () => {
+					this.pack()
+				})
+			}, 1000)
 
 			console.log(222)
 
@@ -191,7 +184,11 @@ namespace bws.packer.demo
 			let ret: JSX.Element =
 				<div>
 					<div style={{width: "100%", height: "100%", fontSize: 12}}>
-						<flex.TabNavigator ref="tabNavigator" solidCheck={this.state.solidCheck} handle_selectSolid={this.handle_selectSolid.bind(this)}
+						<flex.TabNavigator 
+							ref="tabNavigator"
+							solidCheck={this.state.solidCheck}
+							handle_selectSolid={this.handle_selectSolid.bind(this)}
+							handle_reset={this.handle_reset.bind(this)}
 										   style={{ width: 400, height: "100%", float: "left" }}>
 							<flex.NavigatorContent label="装载项">
 								<ItemEditor application={this}
@@ -217,6 +214,25 @@ namespace bws.packer.demo
 				this.drawSwitchSolid()
 			})
 		} 
+
+		private handle_reset () {
+			let wrapperInf = this.state.wrappers && this.state.wrappers.data_ && this.state.wrappers.data_[0]
+
+			this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
+			this.camera.position.x = -wrapperInf.length / 1.5
+			this.camera.position.z = this.result.front().size() * 5;
+
+			this.trackball = new THREE.TrackballControls(this.camera);
+			this.trackball.rotateSpeed = 10;
+			this.trackball.zoomSpeed = 1.2;
+			this.trackball.panSpeed = 0.8;
+			this.trackball.noZoom = false;
+			this.trackball.noPan = false;
+			this.trackball.staticMoving = true;
+			this.trackball.dynamicDampingFactor = 0.3;
+
+			this.render_three()
+		}
 
 		private wrapper_to_canvas(wrapper: Wrapper, index: number): HTMLCanvasElement
 		{
@@ -335,7 +351,7 @@ namespace bws.packer.demo
 				let wrapperInf = this.state.wrappers && this.state.wrappers.data_ && this.state.wrappers.data_[0]
 
 				this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
-				this.camera.position.x = -wrapperInf.length / 2
+				this.camera.position.x = -wrapperInf.length / 1.5
 				this.camera.position.z = wrapper.size() * 5;
 
 				this.trackball = new THREE.TrackballControls(this.camera);
