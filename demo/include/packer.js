@@ -63,36 +63,37 @@ var bws;
                     _this.result = new packer_1.WrapperArray();
                     _this.state = { solidCheck: false, instances: new packer_1.InstanceFormArray(), wrappers: new packer_1.WrapperArray() };
                     _this.recordWrapper = null;
-                    setTimeout(function () {
-                        var instances = new packer_1.InstanceFormArray();
-                        var wrappers = new packer_1.WrapperArray();
-                        var info = {
-                            "vehicleModel": "12.5m",
-                            "vehicleNo": "P888888",
-                            "vehicleLength": 1250,
-                            "vehicleWidth": 250,
-                            "vehicleHeight": 250,
-                            "packageList": [
-                                {
-                                    "partName": "加油管总成1",
-                                    "length": 60,
-                                    "width": 40,
-                                    "height": 28,
-                                    "sum": 10
-                                }
-                            ]
-                        };
-                        wrappers.push(new packer_1.Wrapper(info.vehicleNo, 1000, info.vehicleWidth, info.vehicleHeight, info.vehicleLength, 0));
-                        info.packageList.forEach(function (good) {
-                            instances.push(new packer_1.InstanceForm(new packer_1.Product(good.partName, good.width, good.height, good.length, good.color), good.sum));
-                        });
-                        _this.setState({
-                            instances: instances,
-                            wrappers: wrappers
-                        }, function () {
-                            _this.pack();
-                        });
-                    }, 1000);
+                    // setTimeout(() => {
+                    // 	let instances = new InstanceFormArray()
+                    // 	let wrappers = new WrapperArray()
+                    // 	let info = {
+                    // 		"vehicleModel": "12.5m",
+                    // 		"vehicleNo": "P888888",
+                    // 		"vehicleLength": 1250,
+                    // 		"vehicleWidth": 250,
+                    // 		"vehicleHeight": 250,
+                    // 		"packageList": [
+                    // 			{
+                    // 				color: "rgba(190,153,36,1)",
+                    // 				height: 28,
+                    // 				length: 60,
+                    // 				partName: "右遮阳板总成",
+                    // 				sum: 10,
+                    // 				width: 40,
+                    // 			}
+                    // 		]
+                    // 	}
+                    // 	wrappers.push(new Wrapper(info.vehicleNo, 1000, info.vehicleWidth, info.vehicleHeight, info.vehicleLength, 0))
+                    // 	info.packageList.forEach(good => {
+                    // 		instances.push(new InstanceForm(new Product(good.partName, good.width, good.height, good.length, good.color), good.sum))
+                    // 	})
+                    // 	this.setState({
+                    // 		instances,
+                    // 		wrappers
+                    // 	}, () => {
+                    // 		this.pack()
+                    // 	})
+                    // }, 1000)
                     console.log(222);
                     window.addEventListener('message', function (event) {
                         //  if(event.origin !== 'http://davidwalsh.name') return;
@@ -416,7 +417,7 @@ var bws;
                     // ---------------------------------------
                     if (wrap.color_ == undefined)
                         wrap.color_ = wrap.instance.color || Math.random() * 0xFFFFFF;
-                    var shape = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
+                    var shape = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
                         color: wrap.color_,
                         opacity: 0.5,
                         transparent: !this.state.solidCheck

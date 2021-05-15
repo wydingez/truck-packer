@@ -33,40 +33,41 @@ namespace bws.packer.demo
 			this.state = { solidCheck: false, instances: new InstanceFormArray(), wrappers: new WrapperArray() }
 			this.recordWrapper = null
 			
-			setTimeout(() => {
-				let instances = new InstanceFormArray()
-				let wrappers = new WrapperArray()
+			// setTimeout(() => {
+			// 	let instances = new InstanceFormArray()
+			// 	let wrappers = new WrapperArray()
 				
-				let info = {
-					"vehicleModel": "12.5m",
-					"vehicleNo": "P888888",
-					"vehicleLength": 1250,
-					"vehicleWidth": 250,
-					"vehicleHeight": 250,
-					"packageList": [
-						{
-							"partName": "加油管总成1",
-							"length": 60,
-							"width": 40,
-							"height": 28,
-							"sum": 10
-						}
-					]
-				}
+			// 	let info = {
+			// 		"vehicleModel": "12.5m",
+			// 		"vehicleNo": "P888888",
+			// 		"vehicleLength": 1250,
+			// 		"vehicleWidth": 250,
+			// 		"vehicleHeight": 250,
+			// 		"packageList": [
+			// 			{
+			// 				color: "rgba(190,153,36,1)",
+			// 				height: 28,
+			// 				length: 60,
+			// 				partName: "右遮阳板总成",
+			// 				sum: 10,
+			// 				width: 40,
+			// 			}
+			// 		]
+			// 	}
 	
-				wrappers.push(new Wrapper(info.vehicleNo, 1000, info.vehicleWidth, info.vehicleHeight, info.vehicleLength, 0))
+			// 	wrappers.push(new Wrapper(info.vehicleNo, 1000, info.vehicleWidth, info.vehicleHeight, info.vehicleLength, 0))
 		
-				info.packageList.forEach(good => {
-					instances.push(new InstanceForm(new Product(good.partName, good.width, good.height, good.length, good.color), good.sum))
-				})
+			// 	info.packageList.forEach(good => {
+			// 		instances.push(new InstanceForm(new Product(good.partName, good.width, good.height, good.length, good.color), good.sum))
+			// 	})
 
-				this.setState({
-					instances,
-					wrappers
-				}, () => {
-					this.pack()
-				})
-			}, 1000)
+			// 	this.setState({
+			// 		instances,
+			// 		wrappers
+			// 	}, () => {
+			// 		this.pack()
+			// 	})
+			// }, 1000)
 
 			console.log(222)
 
@@ -473,7 +474,7 @@ namespace bws.packer.demo
 			let shape: THREE.Mesh = new THREE.Mesh
 			(
 				geometry,
-				new THREE.MeshLambertMaterial
+				new THREE.MeshBasicMaterial
 				({
 					color: (wrap as any).color_,
 					opacity: 0.5,
