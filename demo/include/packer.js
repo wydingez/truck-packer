@@ -600,11 +600,11 @@ var bws;
                 }
                 InstanceEditor.prototype.createColumns = function () {
                     var columns = [
-                        { key: "$name", name: "名称", editable: true, width: 100 },
-                        { key: "$width", name: "宽", editable: true, width: 60 },
-                        { key: "$height", name: "高", editable: true, width: 60 },
-                        { key: "$length", name: "长", editable: true, width: 60 },
-                        { key: "$count", name: "数量", editable: true, width: 60 }
+                        { key: "$name", name: "名称", width: 100 },
+                        { key: "$width", name: "宽", width: 60 },
+                        { key: "$height", name: "高", width: 60 },
+                        { key: "$length", name: "长", width: 60 },
+                        { key: "$count", name: "数量", width: 60 }
                     ];
                     return columns;
                 };
@@ -618,10 +618,10 @@ var bws;
                 }
                 WrapperEditor.prototype.createColumns = function () {
                     var columns = [
-                        { key: "$name", name: "名称", editable: true, width: 100 },
-                        { key: "$width", name: "宽", editable: true, width: 60 },
-                        { key: "$height", name: "高", editable: true, width: 60 },
-                        { key: "$length", name: "长", editable: true, width: 60 },
+                        { key: "$name", name: "名称", width: 100 },
+                        { key: "$width", name: "宽", width: 60 },
+                        { key: "$height", name: "高", width: 60 },
+                        { key: "$length", name: "长", width: 60 },
                     ];
                     return columns;
                 };
