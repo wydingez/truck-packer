@@ -157,7 +157,7 @@ namespace bws.packer.demo
 		{
 			let ret: JSX.Element =
 				<div>
-					<h3> 容器列表</h3>
+					<h3> 车辆列表</h3>
 					<ReactDataGrid rowGetter={this.get_row.bind(this) }
 								   rowsCount={this.wrappers.size() }
 								   columns={this.columns}
@@ -246,7 +246,7 @@ namespace bws.packer.demo
 		{
 			let ret: JSX.Element =
 				<div>
-					<h3> 单个容器装载实例 </h3>
+					<h3> 单个列车装载货物 </h3>
 					<ReactDataGrid rowGetter={this.get_row.bind(this) }
 						rowsCount={this.wrapper.size()}
 						columns={this.columns}

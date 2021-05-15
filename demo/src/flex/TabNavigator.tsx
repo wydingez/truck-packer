@@ -25,7 +25,7 @@ namespace flex
 
 				let label: JSX.Element = 
 					<li key={i} className="tabNavigator_label">
-						<a href="#" className={className} 
+						<a href="#" className={className}  style={{'font-size': '1.17em'}}
 						   onClick={this.handle_change.bind(this, i) }>{child.props.label}</a>
 					</li>;
 

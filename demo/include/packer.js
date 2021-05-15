@@ -514,7 +514,10 @@ var bws;
                     this.props.dataProvider.addEventListener("insert", this.handle_data_change, this);
                     this.props.dataProvider.addEventListener("erase", this.handle_data_change, this);
                     var ret = React.createElement("div", null,
-                        React.createElement("h3", null, " \u88C5\u8F7D\u8D27\u7269\u5217\u8868 "),
+                        React.createElement("h3", null,
+                            " ",
+                            this.props.title,
+                            " "),
                         React.createElement(ReactDataGrid, { rowGetter: this.get_row.bind(this), rowsCount: this.props.dataProvider.size(), columns: this.columns, onRowUpdated: this.handle_row_change.bind(this), onCellSelected: this.handle_select.bind(this), enableCellSelect: true, minHeight: Math.min(document.body.offsetHeight * .3, 40 + this.props.dataProvider.size() * 35) }),
                         React.createElement("p", { style: { textAlign: "right" } }));
                     return ret;
@@ -582,12 +585,12 @@ var bws;
                         React.createElement("hr", null),
                         React.createElement("p", null,
                             " ",
-                            React.createElement(InstanceEditor, { dataProvider: this.props.instances }),
+                            React.createElement(InstanceEditor, { dataProvider: this.props.instances, title: "\u8F66\u8F86\u5217\u8868" }),
                             " "),
                         React.createElement("hr", null),
                         React.createElement("p", null,
                             " ",
-                            React.createElement(WrapperEditor, { dataProvider: this.props.wrappers }),
+                            React.createElement(WrapperEditor, { dataProvider: this.props.wrappers, title: "\u88C5\u8F7D\u8D27\u7269\u5217\u8868" }),
                             " "));
                 };
                 return ItemEditor;
@@ -757,7 +760,7 @@ var bws;
                 ------------------------------------------------------------ */
                 WrapperGrid.prototype.render = function () {
                     var ret = React.createElement("div", null,
-                        React.createElement("h3", null, " \u5BB9\u5668\u5217\u8868"),
+                        React.createElement("h3", null, " \u8F66\u8F86\u5217\u8868"),
                         React.createElement(ReactDataGrid, { rowGetter: this.get_row.bind(this), rowsCount: this.wrappers.size(), columns: this.columns, enableCellSelect: true, onCellSelected: this.handle_select.bind(this), minHeight: Math.min(document.body.offsetHeight * .3, 40 + this.wrappers.size() * 35) }));
                     return ret;
                 };
@@ -824,7 +827,7 @@ var bws;
                 ------------------------------------------------------------ */
                 WrapGrid.prototype.render = function () {
                     var ret = React.createElement("div", null,
-                        React.createElement("h3", null, " \u5355\u4E2A\u5BB9\u5668\u88C5\u8F7D\u5B9E\u4F8B "),
+                        React.createElement("h3", null, " \u5355\u4E2A\u5217\u8F66\u88C5\u8F7D\u8D27\u7269 "),
                         React.createElement(ReactDataGrid, { rowGetter: this.get_row.bind(this), rowsCount: this.wrapper.size(), columns: this.columns, enableCellSelect: true, onCellSelected: this.handle_select.bind(this), minHeight: Math.min(document.body.offsetHeight * .3, 40 + this.wrapper.size() * 35) }));
                     return ret;
                 };
@@ -855,7 +858,7 @@ var flex;
                 var child = children[i];
                 var className = (i == this.state.selectedIndex) ? "active" : "";
                 var label = React.createElement("li", { key: i, className: "tabNavigator_label" },
-                    React.createElement("a", { href: "#", className: className, onClick: this.handle_change.bind(this, i) }, child.props.label));
+                    React.createElement("a", { href: "#", className: className, style: { 'font-size': '1.17em' }, onClick: this.handle_change.bind(this, i) }, child.props.label));
                 tabs.push(label);
             }
             var ret = React.createElement("div", { className: "tabNavigator", style: __assign(__assign({}, this.props.style), { position: 'relative' }) },

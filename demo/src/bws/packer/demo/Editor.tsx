@@ -81,7 +81,7 @@ namespace bws.packer.demo
 
 			let ret: JSX.Element =
 				<div>
-					<h3> 装载货物列表 </h3>
+					<h3> {this.props.title} </h3>
 					<ReactDataGrid rowGetter={this.get_row.bind(this)}
 								   rowsCount={this.props.dataProvider.size()}
 								   columns={this.columns} 

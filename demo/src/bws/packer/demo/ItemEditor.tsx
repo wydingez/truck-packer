@@ -76,9 +76,9 @@ namespace bws.packer.demo
 					</tbody>
 					</table>
 					<hr />
-					<p> <InstanceEditor dataProvider={this.props.instances} /> </p>
+					<p> <InstanceEditor dataProvider={this.props.instances} title="车辆列表"/> </p>
 					<hr />
-					<p> <WrapperEditor dataProvider={this.props.wrappers} /> </p>
+					<p> <WrapperEditor dataProvider={this.props.wrappers} title="装载货物列表"/> </p>
 				</div>;
 		}
 	}
