@@ -123,7 +123,7 @@ namespace bws.packer.demo
 			this.columns =
 				[
 					{ key: "$name", name: "名称", width: 120 },
-					{ key: "$scale", name: "尺寸", width: 90 },
+					{ key: "$scale", name: "尺寸", width: 120 },
 					{ key: "$spaceUtilization", name: "空间利用率", width: 90 }
 				];
 		}

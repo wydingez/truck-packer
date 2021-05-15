@@ -192,7 +192,7 @@ var bws;
                 Application.prototype.handle_reset = function () {
                     var wrapperInf = this.state.wrappers && this.state.wrappers.data_ && this.state.wrappers.data_[0];
                     this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
-                    this.camera.position.x = -wrapperInf.length / 1.5;
+                    this.camera.position.x = -wrapperInf.length / 1.3;
                     this.camera.position.z = this.result.front().size() * 5;
                     this.trackball = new THREE.TrackballControls(this.camera);
                     this.trackball.rotateSpeed = 10;
@@ -727,7 +727,7 @@ var bws;
                     _this.columns =
                         [
                             { key: "$name", name: "名称", width: 120 },
-                            { key: "$scale", name: "尺寸", width: 90 },
+                            { key: "$scale", name: "尺寸", width: 120 },
                             { key: "$spaceUtilization", name: "空间利用率", width: 90 }
                         ];
                     return _this;

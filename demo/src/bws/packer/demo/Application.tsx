@@ -219,7 +219,7 @@ namespace bws.packer.demo
 			let wrapperInf = this.state.wrappers && this.state.wrappers.data_ && this.state.wrappers.data_[0]
 
 			this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
-			this.camera.position.x = -wrapperInf.length / 1.5
+			this.camera.position.x = -wrapperInf.length / 1.3
 			this.camera.position.z = this.result.front().size() * 5;
 
 			this.trackball = new THREE.TrackballControls(this.camera);
