@@ -697,8 +697,8 @@ var bws;
                                 React.createElement("tr", null),
                                 React.createElement("tr", null))),
                         React.createElement("hr", null),
-                        React.createElement("p", null, " \u88C5\u8F7D\u7ED3\u679C "),
-                        React.createElement("ul", null,
+                        React.createElement("p", { style: { "font-size": '1.17em' } }, " \u88C5\u8F7D\u7ED3\u679C "),
+                        React.createElement("ul", { style: { "font-size": '1.17em' } },
                             React.createElement("li", null,
                                 " \u7A7A\u95F4\u5229\u7528\u7387: ",
                                 Math.round(this.props.wrappers.getUtilization() * 10000) / 100.0,
@@ -827,7 +827,7 @@ var bws;
                 ------------------------------------------------------------ */
                 WrapGrid.prototype.render = function () {
                     var ret = React.createElement("div", null,
-                        React.createElement("h3", null, " \u5355\u4E2A\u5217\u8F66\u88C5\u8F7D\u8D27\u7269 "),
+                        React.createElement("h3", null, " \u5355\u4E2A\u8F66\u8F86\u88C5\u8F7D\u8D27\u7269\u5217\u8868 "),
                         React.createElement(ReactDataGrid, { rowGetter: this.get_row.bind(this), rowsCount: this.wrapper.size(), columns: this.columns, enableCellSelect: true, onCellSelected: this.handle_select.bind(this), minHeight: Math.min(document.body.offsetHeight * .3, 40 + this.wrapper.size() * 35) }));
                     return ret;
                 };

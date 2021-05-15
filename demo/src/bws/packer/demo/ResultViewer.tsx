@@ -85,8 +85,8 @@ namespace bws.packer.demo
 						</tbody>
 					</table>
 					<hr />
-					<p> 装载结果 </p>
-					<ul>
+					<p style={{"font-size": '1.17em'}}> 装载结果 </p>
+					<ul style={{"font-size": '1.17em'}}>
 						<li> 空间利用率: {Math.round(this.props.wrappers.getUtilization() * 10000) / 100.0} % </li>
 					</ul>
 					<hr />
@@ -246,7 +246,7 @@ namespace bws.packer.demo
 		{
 			let ret: JSX.Element =
 				<div>
-					<h3> 单个列车装载货物 </h3>
+					<h3> 单个车辆装载货物列表 </h3>
 					<ReactDataGrid rowGetter={this.get_row.bind(this) }
 						rowsCount={this.wrapper.size()}
 						columns={this.columns}
